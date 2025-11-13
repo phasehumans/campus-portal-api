@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mongodb-test:
+    image: mongo:4.4
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_DATABASE: campus-portal-test
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mongodb-test:
+        condition: service_healthy
+    environment:
+      NODE_ENV: test
+      MONGODB_TEST_URI: mongodb://mongodb-test:27017/campus-portal-test
+      JWT_SECRET: test-secret-key-12345
+      SMTP_HOST: smtp.mailtrap.io
+      SMTP_PORT: 465
+      SMTP_USER: test@example.com
+      SMTP_PASS: test-password
+    command: npm test -- --coverage
+    volumes:
+      - ./coverage:/app/coverage

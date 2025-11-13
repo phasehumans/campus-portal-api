@@ -9,49 +9,41 @@ const courseSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
-    title: {
+    name: {
       type: String,
-      required: [true, 'Title is required'],
+      required: [true, 'Course name is required'],
       trim: true,
     },
     description: {
       type: String,
-      default: '',
-    },
-    credits: {
-      type: Number,
-      required: [true, 'Credits are required'],
-      min: [1, 'Credits must be at least 1'],
+      trim: true,
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
-    },
-    department: {
-      type: String,
-      required: true,
+      required: [true, 'Instructor is required'],
     },
     semester: {
       type: String,
-      enum: ['Fall', 'Spring', 'Summer'],
-      required: true,
+      enum: ['Spring', 'Summer', 'Fall', 'Winter'],
+      required: [true, 'Semester is required'],
     },
     year: {
       type: Number,
-      required: true,
+      required: [true, 'Year is required'],
     },
-    schedule: {
-      days: [String], // ['Monday', 'Wednesday', 'Friday']
-      time: String, // '10:00-11:30'
-      location: String,
-    },
-    maxStudents: {
+    credits: {
       type: Number,
-      required: true,
-      min: [1, 'Max students must be at least 1'],
+      required: [true, 'Credits are required'],
+      min: 1,
+      max: 6,
     },
-    enrolledStudents: [
+    capacity: {
+      type: Number,
+      required: [true, 'Capacity is required'],
+      min: 1,
+    },
+    enrolled: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -63,28 +55,32 @@ const courseSchema = new mongoose.Schema(
         ref: 'Course',
       },
     ],
+    schedule: {
+      days: [String],
+      startTime: String,
+      endTime: String,
+      room: String,
+    },
     isActive: {
       type: Boolean,
       default: true,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Index for faster queries
+// Indexes for efficient queries
 courseSchema.index({ courseCode: 1 });
 courseSchema.index({ instructor: 1 });
-courseSchema.index({ department: 1 });
 courseSchema.index({ semester: 1, year: 1 });
+courseSchema.index({ createdAt: -1 });
+
+// Virtual for enrolled count
+courseSchema.virtual('enrolledCount').get(function() {
+  return this.enrolled ? this.enrolled.length : 0;
+});
+
+// Ensure virtuals are serialized
+courseSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Course', courseSchema);

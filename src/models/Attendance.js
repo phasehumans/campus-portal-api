@@ -5,48 +5,48 @@ const attendanceSchema = new mongoose.Schema(
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'Student is required'],
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Course',
-      required: true,
+      required: [true, 'Course is required'],
     },
     date: {
       type: Date,
-      required: [true, 'Date is required'],
+      required: [true, 'Attendance date is required'],
     },
     status: {
       type: String,
       enum: ['present', 'absent', 'late', 'excused'],
-      required: true,
+      required: [true, 'Attendance status is required'],
     },
     remarks: {
       type: String,
-      default: '',
+      trim: true,
     },
-    recordedBy: {
+    markedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'Marked by user is required'],
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
+    semester: {
+      type: String,
+      required: [true, 'Semester is required'],
     },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
+    year: {
+      type: Number,
+      required: [true, 'Year is required'],
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Compound index to prevent duplicates
+// Compound index to prevent duplicate attendance records
 attendanceSchema.index({ student: 1, course: 1, date: 1 }, { unique: true });
 attendanceSchema.index({ student: 1, course: 1 });
 attendanceSchema.index({ course: 1, date: 1 });
+attendanceSchema.index({ date: 1 });
+attendanceSchema.index({ status: 1 });
 
 module.exports = mongoose.model('Attendance', attendanceSchema);

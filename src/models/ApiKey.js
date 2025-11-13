@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 
 const apiKeySchema = new mongoose.Schema(
@@ -7,85 +6,54 @@ const apiKeySchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: [true, 'User is required'],
     },
     key: {
       type: String,
+      required: true,
       unique: true,
-      required: true,
-      default: () => uuidv4(),
-    },
-    hashedKey: {
-      type: String,
-      required: true,
     },
     name: {
       type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      default: '',
+      required: [true, 'API Key name is required'],
+      trim: true,
     },
     permissions: [
       {
         type: String,
-        enum: [
-          'read',
-          'write',
-          'delete',
-          'admin',
-        ],
+        enum: ['read', 'write', 'delete', 'admin'],
       },
     ],
+    expiresAt: {
+      type: Date,
+      required: [true, 'Expiration date is required'],
+    },
     isActive: {
       type: Boolean,
       default: true,
     },
-    lastUsedAt: {
+    lastUsed: {
       type: Date,
       default: null,
     },
-    expiresAt: {
-      type: Date,
-      default: () => new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Index for faster queries
-apiKeySchema.index({ user: 1 });
-apiKeySchema.index({ hashedKey: 1 });
-
-// Hash the key before saving
-apiKeySchema.pre('save', function (next) {
-  if (this.isModified('key') || this.isNew) {
-    this.hashedKey = crypto
-      .createHash('sha256')
-      .update(this.key)
-      .digest('hex');
-  }
-  next();
-});
-
-// Method to verify API key
-apiKeySchema.statics.verifyKey = function (key) {
-  const hashedKey = crypto
-    .createHash('sha256')
-    .update(key)
-    .digest('hex');
-  return this.findOne({
-    hashedKey,
+// Static method to verify API key
+apiKeySchema.statics.verifyKey = async function(providedKey) {
+  const hashedKey = crypto.createHash('sha256').update(providedKey).digest('hex');
+  return await this.findOne({
+    key: hashedKey,
     isActive: true,
     expiresAt: { $gt: new Date() },
   }).populate('user');
 };
+
+// Indexes
+apiKeySchema.index({ user: 1 });
+apiKeySchema.index({ key: 1 });
+apiKeySchema.index({ expiresAt: 1 });
+apiKeySchema.index({ isActive: 1 });
 
 module.exports = mongoose.model('ApiKey', apiKeySchema);

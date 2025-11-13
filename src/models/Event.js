@@ -4,17 +4,13 @@ const eventSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, 'Title is required'],
+      required: [true, 'Event title is required'],
       trim: true,
     },
     description: {
       type: String,
-      required: [true, 'Description is required'],
-    },
-    organizer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+      required: [true, 'Event description is required'],
+      trim: true,
     },
     startDate: {
       type: Date,
@@ -26,17 +22,23 @@ const eventSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
+      required: [true, 'Location is required'],
+      trim: true,
+    },
+    organizer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Organizer is required'],
     },
     category: {
       type: String,
-      enum: ['academic', 'cultural', 'sports', 'technical', 'social', 'other'],
-      required: true,
+      enum: ['Academic', 'Sports', 'Cultural', 'Workshop', 'Seminar', 'Other'],
+      default: 'Other',
     },
     capacity: {
       type: Number,
-      required: true,
-      min: [1, 'Capacity must be at least 1'],
+      required: [true, 'Capacity is required'],
+      min: 1,
     },
     registrations: [
       {
@@ -44,37 +46,41 @@ const eventSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: 'User',
         },
-        registeredAt: { type: Date, default: Date.now },
+        registeredAt: {
+          type: Date,
+          default: Date.now,
+        },
+        status: {
+          type: String,
+          enum: ['registered', 'attended', 'cancelled'],
+          default: 'registered',
+        },
       },
     ],
-    visibleTo: [
-      {
-        type: String,
-        enum: ['student', 'faculty', 'admin'],
-      },
-    ],
+    image: {
+      type: String,
+      default: null,
+    },
     isPublished: {
       type: Boolean,
       default: true,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Index for faster queries
+// Indexes
 eventSchema.index({ organizer: 1 });
-eventSchema.index({ startDate: 1 });
+eventSchema.index({ startDate: 1, endDate: 1 });
 eventSchema.index({ category: 1 });
-eventSchema.index({ isPublished: 1 });
+eventSchema.index({ createdAt: -1 });
+
+// Virtual for registered count
+eventSchema.virtual('registeredCount').get(function() {
+  return this.registrations ? this.registrations.length : 0;
+});
+
+// Ensure virtuals are serialized
+eventSchema.set('toJSON', { virtuals: true });
 
 module.exports = mongoose.model('Event', eventSchema);

@@ -1,0 +1,202 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+.env.test.local
+!.env.example
+!.env.test
+
+# OS & IDE
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.idea/*
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+.project
+.classpath
+.c9/
+*.cer
+*.csr
+*.jks
+
+# Logs
+logs/
+*.log
+lerna-debug.log
+npm-debug.log
+npm-error.log
+pip-log.txt
+pip-delete-this-directory.txt
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Coverage
+coverage/
+.nyc_output/
+*.lcov
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Build & Dist
+dist/
+build/
+out/
+.next/
+.nuxt/
+.cache/
+.vuepress/dist
+.serverless/
+.fusebox/
+.dynamodb/
+
+# Testing
+.mocha_output
+.test_results
+jest_0
+.jest-cache
+
+# IDE & Editor
+*.sublime-text-project
+*.sublime-workspace
+.vs/
+.vscode-test
+.vscode-test.log
+
+# Node tools
+.grunt/
+bower_components/
+jspm_packages/
+.node_repl_history
+*.tsbuildinfo
+
+# Misc
+.cache
+.parcel-cache
+.prettier-ignore
+.eslintcache
+.stylelintcache
+
+# MongoDB
+data/
+data/*
+!data/.gitkeep
+*.dump
+*.bak
+
+# Docker
+docker-compose.override.yml
+.dockerignore.local
+
+# Certificates & Keys
+*.pem
+*.key
+*.pub
+*.crt
+*.p12
+*.pfx
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+.tmp/
+
+# IDE specific
+.vscode/launch.json
+.vscode/tasks.json
+.idea/workspace.xml
+.idea/modules.xml
+
+# macOS
+.AppleDouble
+.LSOverride
+*.swp
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.Trash-*
+.nfs*
+
+# Performance
+prof/
+.prof
+flamegraph.html
+
+# Development
+.dev-cache
+.local
+
+# System files
+.AppleDouble
+.LSOverride
+._*
+
+# Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Rush
+common/temp/
+common/autoinstallers/*/node_modules
+shrinkwrap.yaml
+npm-shrinkwrap.json
+
+# Generated files (keep source)
+!src/**
+!tests/**
+!docs/**
+!scripts/**
+
+# Keep important files
+!package.json
+!package-lock.json
+!README.md
+!CONTRIBUTING.md
+!.github/
+!.gitignore
+!.env.example
+!.env.test
