@@ -169,8 +169,3 @@ campus-portal-api/
 - `PUT /notifications/:id/read` - Mark as read
 - `PUT /notifications/mark-all-read` - Mark all as read
 - `DELETE /notifications/:id` - Delete notification
-
-For issues and questions:
-1. Review [documentation](documentation.md)
-2. [Contribute](CONTRIBUTING.md) 
-3. Contact [dev.chaitanyasonwane@gmail.com](dev.chaitanyasonwane@gmail.com)
