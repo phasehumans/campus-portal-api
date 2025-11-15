@@ -1,14 +1,5 @@
 # Campus Portal - Architecture & User Flow Documentation
 
-## Table of Contents
-1. [System Architecture](#system-architecture)
-2. [Database Schema](#database-schema)
-3. [User Workflows](#user-workflows)
-4. [Security Model](#security-model)
-5. [Scalability Considerations](#scalability-considerations)
-
----
-
 ## System Architecture
 
 ### High-Level Architecture
@@ -153,8 +144,6 @@
          Response
 ```
 
----
-
 ## Database Schema
 
 ### Entity Relationship Diagram
@@ -206,47 +195,6 @@
     │dueDate     │
     └────────────┘
 ```
-
-### Collections & Indexes
-
-```javascript
-// Users
-db.users.createIndex({ email: 1 })
-db.users.createIndex({ role: 1 })
-db.users.createIndex({ department: 1 })
-
-// API Keys
-db.apikeys.createIndex({ user: 1 })
-db.apikeys.createIndex({ hashedKey: 1 })
-db.apikeys.createIndex({ expiresAt: 1 })
-
-// Courses
-db.courses.createIndex({ courseCode: 1 })
-db.courses.createIndex({ instructor: 1 })
-db.courses.createIndex({ semester: 1, year: 1 })
-
-// Results
-db.results.createIndex({ student: 1, course: 1, semester: 1, year: 1 }, { unique: true })
-db.results.createIndex({ isPublished: 1 })
-
-// Announcements
-db.announcements.createIndex({ author: 1 })
-db.announcements.createIndex({ category: 1 })
-db.announcements.createIndex({ createdAt: -1 })
-db.announcements.createIndex({ isPinned: -1, createdAt: -1 })
-
-// Notifications
-db.notifications.createIndex({ recipient: 1, isRead: 1 })
-db.notifications.createIndex({ createdAt: -1 })
-
-// Enrollments
-db.enrollments.createIndex({ student: 1, course: 1 }, { unique: true })
-
-// Attendance
-db.attendance.createIndex({ student: 1, course: 1, date: 1 }, { unique: true })
-```
-
----
 
 ## User Workflows
 
@@ -600,117 +548,3 @@ Login: User enters password
        ▼                ▼
   Login OK        Return Error
 ```
-
----
-
-## Scalability Considerations
-
-### Database Optimization
-
-1. **Indexing Strategy**
-   - Foreign keys indexed for JOIN performance
-   - Time-based queries indexed (createdAt)
-   - Role-based queries indexed
-   - Unique constraints on email and course codes
-
-2. **Query Optimization**
-   - Use `.lean()` for read-only queries
-   - Batch operations for bulk updates
-   - Pagination for large datasets
-   - Aggregate pipelines for complex queries
-
-3. **Caching Strategy** (future)
-   ```
-   - Cache announcements by role
-   - Cache course listings
-   - Cache user permissions
-   - Use Redis for session management
-   - TTL-based cache invalidation
-   ```
-
-### API Scaling
-
-1. **Rate Limiting**
-   - Global limit: 100 req/15min
-   - Auth limit: 5 req/15min
-   - Per-user limits (future)
-
-2. **Load Balancing** (for production)
-   ```
-   Internet
-      │
-      ▼
-   Load Balancer (Nginx)
-      │
-   ┌──┴──┬────┬────┐
-   │     │    │    │
-   ▼     ▼    ▼    ▼
-  API  API  API  API
-  Node Node Node Node
-   │     │    │    │
-   └──────────┬────┘
-              │
-              ▼
-          MongoDB
-   (with replication)
-   ```
-
-3. **Async Processing**
-   - Email notifications → Background queue
-   - Bulk result publishing → Worker jobs
-   - Report generation → Scheduled tasks
-
-4. **Microservices (future)**
-   ```
-   API Gateway
-      │
-   ┌──┼──┬────┬───────────┐
-   │  │  │    │           │
-   ▼  ▼  ▼    ▼           ▼
-  Auth Course Result  Notification
-  MS   MS     MS       MS
-   ```
-
-### Database Connection Pooling
-
-```javascript
-// Mongoose handles connection pooling
-// Configurable via MONGODB_URI
-mongoose.connect(uri, {
-  maxPoolSize: 10,      // Default is 10
-  minPoolSize: 2,       // Default is 2
-  maxIdleTimeMS: 45000  // Default is 45000
-})
-```
-
-### Monitoring & Performance
-
-```
-Production Monitoring Stack:
-┌──────────────┐
-│ Application  │
-│ (Express)    │
-└──────┬───────┘
-       │ Metrics
-       ▼
-┌──────────────┐
-│   Prometheus │ ◄─ Collect metrics
-└──────┬───────┘
-       │
-       ▼
-┌──────────────┐
-│   Grafana    │ ◄─ Visualize metrics
-└──────────────┘
-
-Alerts for:
-- API response time > 1s
-- Error rate > 1%
-- Memory usage > 80%
-- Database connections > pool size
-- Disk space < 10%
-```
-
----
-
-**Last Updated:** November 13, 2024
-**Version:** 1.0.0
