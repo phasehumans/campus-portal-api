@@ -1,10 +1,10 @@
 const express = require('express');
 const enrollmentController = require('../controllers/enrollmentController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Get my enrollments (student)
 router.get('/my-enrollments', enrollmentController.getStudentEnrollments);

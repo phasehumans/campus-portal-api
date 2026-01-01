@@ -27,9 +27,7 @@ const sendError = (res, message, statusCode = 400, error = null) => {
   sendResponse(res, statusCode, false, message, null, error);
 };
 
-/**
- * Handle async errors
- */
+
 const asyncHandler = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };

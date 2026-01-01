@@ -1,16 +1,16 @@
 const express = require('express');
-const { register } = require('../controllers/auth.controller.js')
-const { authenticate, checkRole } = require('../middleware/auth.js');
+const { register, login, getCurrentUser, updateProfile } = require('../controllers/auth.controller.js')
+const { authMiddleware, checkRole } = require('../middleware/auth.js');
 const { authLimiter } = require('../middleware/commonMiddleware.js');
 
 const router = express.Router();
 
 router.post('/register', authLimiter, register);
-router.post('/login', authLimiter);
+router.post('/login', authLimiter, login);
 
-router.use(authenticate);
-router.get('/me',);
-router.put('/me',);
+router.use(authMiddleware);
+router.get('/me', getCurrentUser);
+router.put('/me', updateProfile);
 
 router.post('/api-key', );
 router.get('/api-keys',);

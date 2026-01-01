@@ -1,10 +1,16 @@
-const { asyncHandler, sendSuccess, sendError } = require('../utils/responseHandler.js');
+const {
+  asyncHandler,
+  sendSuccess,
+  sendError,
+} = require("../utils/responseHandler.js");
 
-const { z } = require('zod');
-const { UserModel } = require('../models/user.model.js');
-const bcrypt = require('bcrypt')
-const { sendEmail, emailTemplates } = require('../utils/email.js');
-const { success } = require('zod/v4');
+const { z } = require("zod");
+const { UserModel } = require("../models/user.model.js");
+const bcrypt = require("bcrypt");
+const { sendEmail, emailTemplates } = require("../utils/email.js");
+const { success } = require("zod/v4");
+const jwt = require("jsonwebtoken");
+const { fa } = require("zod/v4/locales");
 
 const register = asyncHandler(async (req, res) => {
   const registerSchema = z.object({
@@ -17,59 +23,164 @@ const register = asyncHandler(async (req, res) => {
     role: z.enum(["student", "faculty"]).default("student"),
   });
 
-  const parseData = registerSchema.safeParse(req.body)
+  const parseData = registerSchema.safeParse(req.body);
 
-  if(!parseData.success){
+  if (!parseData.success) {
     return res.status(400).json({
-      success : false,
-      message : "invalid inputs",
-      errors : parseData.error.flatten()
-    })
+      success: false,
+      message: "invalid inputs",
+      errors: parseData.error.flatten(),
+    });
   }
 
-  const {firstName, lastName, email, password, department, phone, role} = parseData.data
+  const { firstName, lastName, email, password, department, phone, role } =
+    parseData.data;
 
   const existUser = await UserModel.findOne({
-    email : email
-  })
+    email: email,
+  });
 
-  if(existUser){
+  if (existUser) {
     return res.status(409).json({
-      success : false,
-      message : "user already exists"
-    })
+      success: false,
+      message: "user already exists",
+    });
   }
 
   // console.log(process.env.BCRYPT_ROUNDS); >> env var are string
 
-  const hashPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS));
+  const hashPassword = await bcrypt.hash(
+    password,
+    Number(process.env.BCRYPT_ROUNDS)
+  );
 
   try {
     const user = await UserModel.create({
-      firstName : firstName,
-      lastName : lastName,
-      email : email,
-      password : hashPassword,
-      department : department,
-      phone : phone,
-      role : role
-    })
-  
-    if(user){
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: hashPassword,
+      department: department,
+      phone: phone,
+      role: role,
+    });
+
+    if (user) {
       try {
         await sendEmail(
           user.email,
-          'Welcome to Campus Portal',
+          "Welcome to Campus Portal",
           emailTemplates.welcome(user.firstName, user.email)
-        ) 
+        );
       } catch (error) {
         console.error("Welcome email failed:", error);
       }
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "user created and welcome email sent",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      errors: error.message,
+    });
+  }
+});
+
+const login = asyncHandler(async (req, res) => {
+  const loginSchema = z.object({
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(1, "Password is required"),
+  });
+
+  const parseData = loginSchema.safeParse(req.body);
+
+  if (!parseData.success) {
+    return res.status(400).json({
+      success: false,
+      message: "invalid inputs",
+      errors: parseData.error.flatten(),
+    });
+  }
+
+  const { email, password } = parseData.data;
+
+  const user = await UserModel.findOne({
+    email: email,
+  }).select("+password");
+  // password is select false
+
+  // console.log(user)
+
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: "invalid email or password",
+    });
+  }
+
+  // extract salt from hashPassword
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordMatch) {
+    return res.status(401).json({
+      success: false,
+      message: "invalid email or password",
+    });
+  }
+
+  try {
+    user.lastLogin = new Date();
+    await user.save();
+  
+    console.log(user.lastLogin)
+  
+    const token = jwt.sign(
+      {
+        id: user._id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRE }
+    );
+
+    return res.status(200).json({
+      success : true,
+      message : "login successful",
+      token : token,
+      lastlogin : user.lastLogin
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "authentication failed",
+      errors : error.message
+    })
+  }
+
+});
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+  const userId = req.id
+  try {
+    const user = await UserModel.findOne({
+      _id : userId
+    })
+  
+    if(!user){
+      return res.status(400).json({
+        success : false,
+        message : "user doesnot exist"
+      })
+    }
   
     return res.status(200).json({
       success : true,
-      message : "user created and welcome email sent",
+      message : "USER DETAILS",
+      details : user
     })
   } catch (error) {
     return res.status(500).json({
@@ -78,21 +189,56 @@ const register = asyncHandler(async (req, res) => {
       errors : error.message
     })
   }
-
 });
 
+const updateProfile = asyncHandler(async (req, res) => {
+  const userId = req.id
 
-const login = asyncHandler(async (req, res) => {
+  const allowedFields = ['firstName', 'lastName', 'phone', 'avatar']
+  const updateData = {}
 
+  allowedFields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updateData[field] = req.body[field];
+    }
+  });
+
+  try {
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        ...updateData,
+        updatedAt: new Date(),
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
   
-  // const validatedData = loginSchema.parse(req.body);
-  // const result = await authService.loginUser(
-  //   validatedData.email,
-  //   validatedData.password
-  // );
-
-  // sendSuccess(res, result, "Login successful");
+    if(!user){
+      return res.status(400).json({
+        success : false,
+        message : "user not found",
+  
+      })
+    }
+  
+    return res.status(200).json({
+      success : true,
+      message : "user profile updated",
+      update : user
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
+  
 });
+
 
 /**
  * Create API key
@@ -120,21 +266,7 @@ const revokeApiKey = asyncHandler(async (req, res) => {
   sendSuccess(res, result, "API key revoked successfully");
 });
 
-/**
- * Get current user
- */
-const getCurrentUser = asyncHandler(async (req, res) => {
-  const user = await authService.getCurrentUser(req.user._id);
-  sendSuccess(res, user, "User retrieved successfully");
-});
 
-/**
- * Update user profile
- */
-const updateProfile = asyncHandler(async (req, res) => {
-  const user = await authService.updateUserProfile(req.user._id, req.body);
-  sendSuccess(res, user, "Profile updated successfully");
-});
 
 module.exports = {
   register: register,

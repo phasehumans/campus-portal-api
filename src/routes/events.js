@@ -1,10 +1,10 @@
 const express = require('express');
 const eventController = require('../controllers/eventController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Public read access
 router.get('/', eventController.getEvents);

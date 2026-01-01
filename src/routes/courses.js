@@ -1,10 +1,10 @@
 const express = require('express');
 const courseController = require('../controllers/courseController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Public read access
 router.get('/', courseController.getAllCourses);

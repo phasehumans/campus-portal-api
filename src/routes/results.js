@@ -1,10 +1,10 @@
 const express = require('express');
 const resultController = require('../controllers/resultController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Get results - role based
 router.get('/', resultController.getResults);

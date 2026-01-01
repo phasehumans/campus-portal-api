@@ -1,67 +1,107 @@
-const User = require('../models/user.model');
-const { verifyJWT, verifyApiKey } = require('../utils/auth');
-const { sendError } = require('../utils/responseHandler');
+// const User = require('../models/user.model');
+// const { verifyJWT, verifyApiKey } = require('../utils/auth');
+// const { sendError } = require('../utils/responseHandler');
 
-/**
- * Authenticate user via JWT or API Key
- */
-const authenticate = async (req, res, next) => {
+const jwt = require('jsonwebtoken');
+const { success } = require('zod/v4');
+
+
+
+const authMiddleware = async (req, res, next) => {
+
   try {
     let token;
     let user;
-    let apiKey;
+    let apikey;
 
-    // Check for JWT in Authorization header
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
-      token = req.headers.authorization.split(' ')[1];
+    if(req.headers.authorization){
+      token = req.headers.authorization
+      const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+
       try {
-        const decoded = verifyJWT(token);
-        user = await User.findById(decoded.id);
-
-        if (!user || !user.isActive) {
-          return sendError(res, 'User not found or inactive', 401);
+        if(decodedData){
+          req.id = decodedData.id
+          req.role = decodedData.role
+          next()
+        }else{
+          return res.status(403).json({
+            success : false,
+            message : "you are not signed in"
+          })
         }
-
-        req.user = user;
-        req.authMethod = 'jwt';
       } catch (error) {
-        return sendError(res, 'Invalid JWT token', 401);
+        return res.status(500).json({
+          success : false,
+          message : "internal servar error",
+          errors : error.message
+        })
       }
-    } else if (req.headers['x-api-key']) {
-      // Check for API Key
-      apiKey = req.headers['x-api-key'];
-      try {
-        const apiKeyDoc = await verifyApiKey(apiKey);
-
-        if (!apiKeyDoc) {
-          return sendError(res, 'Invalid or expired API key', 401);
-        }
-
-        user = apiKeyDoc.user;
-
-        if (!user.isActive) {
-          return sendError(res, 'User is inactive', 401);
-        }
-
-        req.user = user;
-        req.apiKey = apiKeyDoc;
-        req.authMethod = 'api-key';
-
-        // Update last used time
-        apiKeyDoc.lastUsedAt = new Date();
-        await apiKeyDoc.save();
-      } catch (error) {
-        return sendError(res, 'Invalid API key', 401);
-      }
-    } else {
-      return sendError(res, 'No authentication credentials provided', 401);
+      
     }
-
-    next();
   } catch (error) {
-    console.error('Authentication error:', error);
-    sendError(res, 'Authentication failed', 500, error.message);
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
   }
+
+
+  // try {
+  //   let token;
+  //   let user;
+  //   let apiKey;
+
+  //   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+  //     token = req.headers.authorization.split(' ')[1];
+  //     try {
+  //       const decoded = verifyJWT(token);
+  //       user = await User.findById(decoded.id);
+
+  //       if (!user || !user.isActive) {
+  //         return sendError(res, 'User not found or inactive', 401);
+  //       }
+
+  //       req.user = user;
+  //       req.authMethod = 'jwt';
+  //     } catch (error) {
+  //       return sendError(res, 'Invalid JWT token', 401);
+  //     }
+  //   } else if (req.headers['x-api-key']) {
+  //     // Check for API Key
+  //     apiKey = req.headers['x-api-key'];
+  //     try {
+  //       const apiKeyDoc = await verifyApiKey(apiKey);
+
+  //       if (!apiKeyDoc) {
+  //         return sendError(res, 'Invalid or expired API key', 401);
+  //       }
+
+  //       user = apiKeyDoc.user;
+
+  //       if (!user.isActive) {
+  //         return sendError(res, 'User is inactive', 401);
+  //       }
+
+  //       req.user = user;
+  //       req.apiKey = apiKeyDoc;
+  //       req.authMethod = 'api-key';
+
+  //       // Update last used time
+  //       apiKeyDoc.lastUsedAt = new Date();
+  //       await apiKeyDoc.save();
+  //     } catch (error) {
+  //       return sendError(res, 'Invalid API key', 401);
+  //     }
+  //   } else {
+  //     return sendError(res, 'No authentication credentials provided', 401);
+  //   }
+
+  //   next();
+  // } catch (error) {
+  //   console.error('Authentication error:', error);
+  //   sendError(res, 'Authentication failed', 500, error.message);
+  // }
 };
 
 /**
@@ -142,7 +182,7 @@ const checkOwnershipOrAdmin = (paramName = 'id') => (req, res, next) => {
 };
 
 module.exports = {
-  authenticate,
+  authMiddleware : authMiddleware,
   optionalAuth,
   checkRole,
   checkOwnershipOrAdmin,

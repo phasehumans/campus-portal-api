@@ -1,10 +1,10 @@
 const express = require('express');
 const attendanceController = require('../controllers/attendanceController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Mark attendance (Faculty/Admin only)
 router.post(

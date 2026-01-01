@@ -1,10 +1,10 @@
 const express = require('express');
-const announcementController = require('../controllers/announcementController');
-const { authenticate, checkRole } = require('../middleware/auth');
+const announcementController = require('../controllers/announcementController.js');
+const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.use(authenticate);
+router.use(authMiddleware);
 
 // Public read access for all roles
 router.get('/', announcementController.getAnnouncements);
