@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const bcryptjs = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -65,30 +64,13 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcryptjs.genSalt(10);
-    this.password = await bcryptjs.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
 
-// Compare password method
-userSchema.methods.comparePassword = async function(enteredPassword) {
-  return await bcryptjs.compare(enteredPassword, this.password);
-};
-
-// Remove password from JSON
-userSchema.methods.toJSON = function() {
-  const obj = this.toObject();
-  delete obj.password;
-  return obj;
-};
+// // Remove password from JSON
+// userSchema.methods.toJSON = function() {
+//   const obj = this.toObject();
+//   delete obj.password;
+//   return obj;
+// };
 
 // Indexes
 userSchema.index({ email: 1 });
@@ -96,4 +78,8 @@ userSchema.index({ role: 1 });
 userSchema.index({ department: 1 });
 userSchema.index({ createdAt: -1 });
 
-module.exports = mongoose.model('User', userSchema);
+const UserModel = mongoose.model('user', userSchema);
+
+module.exports = {
+  UserModel : UserModel
+}

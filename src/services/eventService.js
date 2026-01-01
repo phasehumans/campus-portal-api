@@ -1,5 +1,5 @@
-const Event = require('../models/Event');
-const Notification = require('../models/Notification');
+const Event = require('../models/event.model');
+const Notification = require('../models/notification.model');
 
 /**
  * Create event
@@ -173,7 +173,7 @@ const deleteEvent = async (eventId) => {
  */
 const notifyEventCreation = async (event) => {
   try {
-    const User = require('../models/User');
+    const User = require('../models/user.model');
 
     const users = await User.find({
       role: { $in: event.visibleTo },

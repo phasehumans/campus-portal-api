@@ -1,5 +1,5 @@
-const Result = require('../models/Result');
-const Notification = require('../models/Notification');
+const Result = require('../models/result.model');
+const Notification = require('../models/notification.model');
 
 /**
  * Create result (Admin only)
@@ -85,7 +85,7 @@ const getResults = async (userId, userRole, query = {}) => {
     filter.student = userId;
   } else if (userRole === 'faculty') {
     // Faculty can see results for students in their courses
-    const Course = require('../models/Course');
+    const Course = require('../models/course.model');
     const courses = await Course.find({ instructor: userId });
     const courseIds = courses.map(c => c._id);
     filter.course = { $in: courseIds };

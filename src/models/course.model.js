@@ -69,18 +69,21 @@ const courseSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes for efficient queries
 courseSchema.index({ courseCode: 1 });
 courseSchema.index({ instructor: 1 });
 courseSchema.index({ semester: 1, year: 1 });
 courseSchema.index({ createdAt: -1 });
 
-// Virtual for enrolled count
-courseSchema.virtual('enrolledCount').get(function() {
-  return this.enrolled ? this.enrolled.length : 0;
-});
+// // Virtual for enrolled count
+// courseSchema.virtual('enrolledCount').get(function() {
+//   return this.enrolled ? this.enrolled.length : 0;
+// });
 
-// Ensure virtuals are serialized
-courseSchema.set('toJSON', { virtuals: true });
+// // Ensure virtuals are serialized
+// courseSchema.set('toJSON', { virtuals: true });
 
-module.exports = mongoose.model('Course', courseSchema);
+const CourseModel = mongoose.model('course', courseSchema);
+
+module.exports = {
+  CourseModel : CourseModel
+}

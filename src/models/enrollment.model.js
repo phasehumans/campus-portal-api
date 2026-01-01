@@ -52,10 +52,13 @@ const enrollmentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Compound unique index
 enrollmentSchema.index({ student: 1, course: 1, semester: 1, year: 1 }, { unique: true });
 enrollmentSchema.index({ student: 1, status: 1 });
 enrollmentSchema.index({ course: 1, status: 1 });
 enrollmentSchema.index({ enrolledAt: -1 });
 
-module.exports = mongoose.model('Enrollment', enrollmentSchema);
+const EnrollmentModel = mongoose.model('enrollment', enrollmentSchema);
+
+module.exports = {
+  EnrollmentModel : EnrollmentModel
+}

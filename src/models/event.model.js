@@ -69,7 +69,6 @@ const eventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes
 eventSchema.index({ organizer: 1 });
 eventSchema.index({ startDate: 1, endDate: 1 });
 eventSchema.index({ category: 1 });
@@ -83,4 +82,8 @@ eventSchema.virtual('registeredCount').get(function() {
 // Ensure virtuals are serialized
 eventSchema.set('toJSON', { virtuals: true });
 
-module.exports = mongoose.model('Event', eventSchema);
+const EventModel = mongoose.model('event', eventSchema);
+
+module.exports = {
+  EventModel : EventModel
+}

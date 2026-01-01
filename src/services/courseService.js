@@ -1,6 +1,6 @@
-const Course = require('../models/Course');
-const Material = require('../models/Material');
-const Enrollment = require('../models/Enrollment');
+const Course = require('../models/course.model');
+const Material = require('../models/material.model');
+const Enrollment = require('../models/enrollment.model');
 const { sendEmail, emailTemplates } = require('../utils/email');
 
 /**
@@ -132,8 +132,8 @@ const deleteCourse = async (courseId) => {
  * Enroll student in course
  */
 const enrollStudent = async (studentId, courseId) => {
-  const Course = require('../models/Course');
-  const User = require('../models/User');
+  const Course = require('../models/course.model');
+  const User = require('../models/user.model');
 
   const course = await Course.findById(courseId);
   if (!course) {

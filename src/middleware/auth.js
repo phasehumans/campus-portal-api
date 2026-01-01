@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require('../models/user.model');
 const { verifyJWT, verifyApiKey } = require('../utils/auth');
 const { sendError } = require('../utils/responseHandler');
 

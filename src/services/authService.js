@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const ApiKey = require('../models/ApiKey');
+const ApiKey = require('../models/apikey.model');
 const { signToken } = require('../utils/auth');
 const { sendEmail, emailTemplates } = require('../utils/email');
 

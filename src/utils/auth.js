@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const ApiKey = require('../models/ApiKey');
+const ApiKey = require('../models/apikey.model');
 
 /**
  * Verify JWT token

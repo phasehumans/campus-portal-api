@@ -48,7 +48,6 @@ const resultSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Compound unique index to prevent duplicate results
 resultSchema.index({ student: 1, course: 1, semester: 1, year: 1 }, { unique: true });
 resultSchema.index({ student: 1 });
 resultSchema.index({ course: 1 });
@@ -67,4 +66,8 @@ resultSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('Result', resultSchema);
+const ResultModel = mongoose.model('result', resultSchema);
+
+module.exports = {
+  ResultModel : ResultModel
+}

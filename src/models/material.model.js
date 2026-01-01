@@ -70,10 +70,13 @@ const materialSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes
 materialSchema.index({ course: 1 });
 materialSchema.index({ uploadedBy: 1 });
 materialSchema.index({ createdAt: -1 });
 materialSchema.index({ isPinned: -1 });
 
-module.exports = mongoose.model('Material', materialSchema);
+const MaterialModel = mongoose.model('material', materialSchema);
+
+module.exports = {
+  MaterialModel : MaterialModel
+}

@@ -1,5 +1,5 @@
-const Attendance = require('../models/Attendance');
-const Course = require('../models/Course');
+const Attendance = require('../models/attendance.model');
+const Course = require('../models/course.model');
 
 /**
  * Mark attendance

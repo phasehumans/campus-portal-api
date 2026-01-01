@@ -40,20 +40,23 @@ const apiKeySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Static method to verify API key
-apiKeySchema.statics.verifyKey = async function(providedKey) {
-  const hashedKey = crypto.createHash('sha256').update(providedKey).digest('hex');
-  return await this.findOne({
-    key: hashedKey,
-    isActive: true,
-    expiresAt: { $gt: new Date() },
-  }).populate('user');
-};
+// // Static method to verify API key
+// apiKeySchema.statics.verifyKey = async function(providedKey) {
+//   const hashedKey = crypto.createHash('sha256').update(providedKey).digest('hex');
+//   return await this.findOne({
+//     key: hashedKey,
+//     isActive: true,
+//     expiresAt: { $gt: new Date() },
+//   }).populate('user');
+// };
 
-// Indexes
 apiKeySchema.index({ user: 1 });
 apiKeySchema.index({ key: 1 });
 apiKeySchema.index({ expiresAt: 1 });
 apiKeySchema.index({ isActive: 1 });
 
-module.exports = mongoose.model('ApiKey', apiKeySchema);
+const ApikeyModel = mongoose.model('apiKey', apiKeySchema);
+
+module.exports = {
+  ApikeyModel : ApikeyModel
+}

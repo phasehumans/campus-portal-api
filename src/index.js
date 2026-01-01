@@ -6,7 +6,7 @@ const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { applyMiddleware } = require('./middleware/commonMiddleware');
 
 
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth.route.js');
 const announcementRoutes = require('./routes/announcements');
 const resultRoutes = require('./routes/results');
 const courseRoutes = require('./routes/courses');

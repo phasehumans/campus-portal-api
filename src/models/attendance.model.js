@@ -42,11 +42,14 @@ const attendanceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Compound index to prevent duplicate attendance records
 attendanceSchema.index({ student: 1, course: 1, date: 1 }, { unique: true });
 attendanceSchema.index({ student: 1, course: 1 });
 attendanceSchema.index({ course: 1, date: 1 });
 attendanceSchema.index({ date: 1 });
 attendanceSchema.index({ status: 1 });
 
-module.exports = mongoose.model('Attendance', attendanceSchema);
+const AttendanceModel = mongoose.model('attendance', attendanceSchema);
+
+module.exports = {
+  AttendanceModel : AttendanceModel
+}

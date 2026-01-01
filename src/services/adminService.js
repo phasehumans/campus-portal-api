@@ -1,6 +1,6 @@
-const User = require('../models/User');
-const Course = require('../models/Course');
-const Enrollment = require('../models/Enrollment');
+const User = require('../models/user.model');
+const Course = require('../models/course.model');
+const Enrollment = require('../models/enrollment.model');
 
 /**
  * Get all users

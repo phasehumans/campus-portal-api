@@ -1,5 +1,5 @@
-const Announcement = require('../models/Announcement');
-const Notification = require('../models/Notification');
+const Announcement = require('../models/announcement.model');
+const Notification = require('../models/notification.model');
 
 /**
  * Create announcement
@@ -136,7 +136,7 @@ const deleteAnnouncement = async (announcementId, userId, userRole) => {
  */
 const notifyUsersOfAnnouncement = async (announcement) => {
   try {
-    const User = require('../models/User');
+    const User = require('../models/user.model');
 
     const users = await User.find({
       role: { $in: announcement.targetRoles },

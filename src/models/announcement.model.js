@@ -61,11 +61,14 @@ const announcementSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes for efficient queries
 announcementSchema.index({ author: 1 });
 announcementSchema.index({ category: 1 });
 announcementSchema.index({ isPinned: -1, createdAt: -1 });
 announcementSchema.index({ createdAt: -1 });
 announcementSchema.index({ targetRoles: 1 });
 
-module.exports = mongoose.model('Announcement', announcementSchema);
+const AnnouncementModel = mongoose.model('announcement', announcementSchema);
+
+module.exports = {
+  AnnouncementModel : AnnouncementModel
+}
