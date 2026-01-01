@@ -1,10 +1,11 @@
-require('dotenv').config();
+const dotenv = require('dotenv')
+dotenv.config()
 const express = require('express');
 const { connectDB } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 const { applyMiddleware } = require('./middleware/commonMiddleware');
 
-// Import routes
+
 const authRoutes = require('./routes/auth');
 const announcementRoutes = require('./routes/announcements');
 const resultRoutes = require('./routes/results');
@@ -17,10 +18,9 @@ const attendanceRoutes = require('./routes/attendance');
 
 const app = express();
 
-// Connect to database
+
 connectDB();
 
-// Apply common middleware
 applyMiddleware(app);
 
 // Health check endpoint
@@ -32,7 +32,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// API Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/results', resultRoutes);
@@ -43,7 +43,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/attendance', attendanceRoutes);
 
-// API Documentation route
+
 app.get('/api', (req, res) => {
   res.json({
     message: 'Campus Portal API',
@@ -60,19 +60,17 @@ app.get('/api', (req, res) => {
   });
 });
 
-// Error handling
+
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Start server
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
 
-// Handle graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
   server.close(() => {

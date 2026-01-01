@@ -1,28 +1,20 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv')
+dotenv.config()
 
-/**
- * Connect to MongoDB
- */
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/campus-portal';
+    mongoose.connect(process.env.MONGO_URL)
+    // console.log(process.env.MONGO_URL)
 
-    const connection = await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
-    console.log(`MongoDB connected: ${connection.connection.host}`);
-    return connection;
+    console.log(`MongoDB connected`);
   } catch (error) {
     console.error(`MongoDB connection error: ${error.message}`);
     process.exit(1);
   }
 };
 
-/**
- * Disconnect from MongoDB
- */
+
 const disconnectDB = async () => {
   try {
     await mongoose.disconnect();
