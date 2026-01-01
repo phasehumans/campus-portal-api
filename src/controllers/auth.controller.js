@@ -1,8 +1,10 @@
-// const { asyncHandler, sendSuccess, sendError } = require('../utils/responseHandler');
-// const { registerSchema, loginSchema, createApiKeySchema } = require('../utils/validation');
-// const authService = require('../services/authService');
+const { asyncHandler, sendSuccess, sendError } = require('../utils/responseHandler.js');
 
-const { z } = require("zod");
+const { z } = require('zod');
+const { UserModel } = require('../models/user.model.js');
+const bcrypt = require('bcrypt')
+const { sendEmail, emailTemplates } = require('../utils/email.js');
+const { success } = require('zod/v4');
 
 const register = asyncHandler(async (req, res) => {
   const registerSchema = z.object({
@@ -15,21 +17,81 @@ const register = asyncHandler(async (req, res) => {
     role: z.enum(["student", "faculty"]).default("student"),
   });
 
+  const parseData = registerSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
+
+  const {firstName, lastName, email, password, department, phone, role} = parseData.data
+
+  const existUser = await UserModel.findOne({
+    email : email
+  })
+
+  if(existUser){
+    return res.status(409).json({
+      success : false,
+      message : "user already exists"
+    })
+  }
+
+  // console.log(process.env.BCRYPT_ROUNDS); >> env var are string
+
+  const hashPassword = await bcrypt.hash(password, Number(process.env.BCRYPT_ROUNDS));
+
+  try {
+    const user = await UserModel.create({
+      firstName : firstName,
+      lastName : lastName,
+      email : email,
+      password : hashPassword,
+      department : department,
+      phone : phone,
+      role : role
+    })
   
+    if(user){
+      try {
+        await sendEmail(
+          user.email,
+          'Welcome to Campus Portal',
+          emailTemplates.welcome(user.firstName, user.email)
+        ) 
+      } catch (error) {
+        console.error("Welcome email failed:", error);
+      }
+    }
+  
+    return res.status(200).json({
+      success : true,
+      message : "user created and welcome email sent",
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
 
 });
 
-/**
- * Login user
- */
-const login = asyncHandler(async (req, res) => {
-  const validatedData = loginSchema.parse(req.body);
-  const result = await authService.loginUser(
-    validatedData.email,
-    validatedData.password
-  );
 
-  sendSuccess(res, result, "Login successful");
+const login = asyncHandler(async (req, res) => {
+
+  
+  // const validatedData = loginSchema.parse(req.body);
+  // const result = await authService.loginUser(
+  //   validatedData.email,
+  //   validatedData.password
+  // );
+
+  // sendSuccess(res, result, "Login successful");
 });
 
 /**
