@@ -11,6 +11,8 @@ const { sendEmail, emailTemplates } = require("../utils/email.js");
 const { success } = require("zod/v4");
 const jwt = require("jsonwebtoken");
 const { fa } = require("zod/v4/locales");
+const { ApikeyModel } = require("../models/apikey.model.js");
+const crypto = require('crypto')
 
 const register = asyncHandler(async (req, res) => {
   const registerSchema = z.object({
@@ -239,9 +241,52 @@ const updateProfile = asyncHandler(async (req, res) => {
   
 });
 
-
 const createApiKey = asyncHandler(async (req, res) => {
+  const createApiKeySchema = z.object({
+    name: z.string().min(1, "API key name is required"),
+    description: z.string().optional(),
+    permissions: z.array(z.enum(['read', 'write', 'delete', 'admin'])).default(['read']),
+  });
+
+  const parseData = createApiKeySchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs"
+    })
+  }
+
+  const {name, description, permissions} = parseData.data
+  const userId = req.id
+
+  try {
+    const key = crypto.randomBytes(32).toString('hex')
+    const hashedKey = crypto.createHash('sha256').update(key).digest('hex');
   
+    const apikey = await ApikeyModel.create({
+      user : userId,
+      name : name,
+      description : description,
+      permissions : permissions || ['read'],
+      key : hashedKey
+    })
+  
+    return res.status(201).json({
+      success: true,
+      message: "Save this key securely. You will not be able to see it again.",
+      id: apikey._id,
+      key: key,
+      name: apikey.name,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
+
   // const validatedData = createApiKeySchema.parse(req.body);
   // const apiKey = await authService.createApiKey(req.user._id, validatedData);
 
