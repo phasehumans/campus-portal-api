@@ -20,7 +20,7 @@ const announcementSchema = new mongoose.Schema(
     },
     author: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Author is required'],
     },
     targetRoles: [
@@ -40,7 +40,7 @@ const announcementSchema = new mongoose.Schema(
     viewedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
       },
     ],
     attachments: [

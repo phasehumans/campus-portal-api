@@ -20,7 +20,7 @@ const courseSchema = new mongoose.Schema(
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Instructor is required'],
     },
     semester: {
@@ -46,13 +46,13 @@ const courseSchema = new mongoose.Schema(
     enrolled: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
       },
     ],
     prerequisites: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
+        ref: 'course',
       },
     ],
     schedule: {

@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema(
     },
     organizer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Organizer is required'],
     },
     category: {
@@ -44,7 +44,7 @@ const eventSchema = new mongoose.Schema(
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: 'user',
         },
         registeredAt: {
           type: Date,

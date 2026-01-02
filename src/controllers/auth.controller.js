@@ -240,14 +240,12 @@ const updateProfile = asyncHandler(async (req, res) => {
 });
 
 
-/**
- * Create API key
- */
 const createApiKey = asyncHandler(async (req, res) => {
-  const validatedData = createApiKeySchema.parse(req.body);
-  const apiKey = await authService.createApiKey(req.user._id, validatedData);
+  
+  // const validatedData = createApiKeySchema.parse(req.body);
+  // const apiKey = await authService.createApiKey(req.user._id, validatedData);
 
-  sendSuccess(res, apiKey, "API key created successfully", 201);
+  // sendSuccess(res, apiKey, "API key created successfully", 201);
 });
 
 /**

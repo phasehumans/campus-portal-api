@@ -4,12 +4,12 @@ const attendanceSchema = new mongoose.Schema(
   {
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Student is required'],
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
+      ref: 'course',
       required: [true, 'Course is required'],
     },
     date: {
@@ -27,7 +27,7 @@ const attendanceSchema = new mongoose.Schema(
     },
     markedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Marked by user is required'],
     },
     semester: {

@@ -4,12 +4,12 @@ const enrollmentSchema = new mongoose.Schema(
   {
     student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Student is required'],
     },
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
+      ref: 'course',
       required: [true, 'Course is required'],
     },
     status: {

@@ -4,7 +4,7 @@ const materialSchema = new mongoose.Schema(
   {
     course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
+      ref: 'course',
       required: [true, 'Course is required'],
     },
     title: {
@@ -35,7 +35,7 @@ const materialSchema = new mongoose.Schema(
     },
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'user',
       required: [true, 'Uploader is required'],
     },
     downloads: {
@@ -46,7 +46,7 @@ const materialSchema = new mongoose.Schema(
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: 'User',
+          ref: 'user',
         },
         downloadedAt: {
           type: Date,
