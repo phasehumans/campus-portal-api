@@ -7,10 +7,10 @@ const { applyMiddleware } = require('./middleware/commonMiddleware');
 
 
 const authRoutes = require('./routes/auth.route.js');
+const adminRoutes = require("./routes/admin.route.js");
 const announcementRoutes = require('./routes/announcements');
 const resultRoutes = require('./routes/results');
 const courseRoutes = require('./routes/courses');
-const adminRoutes = require('./routes/admin');
 const notificationRoutes = require('./routes/notifications');
 const eventRoutes = require('./routes/events');
 const enrollmentRoutes = require('./routes/enrollments');
@@ -34,10 +34,10 @@ app.get('/health', (req, res) => {
 
 
 app.use('/api/auth', authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use('/api/announcements', announcementRoutes);
 app.use('/api/results', resultRoutes);
 app.use('/api/courses', courseRoutes);
-app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/enrollments', enrollmentRoutes);

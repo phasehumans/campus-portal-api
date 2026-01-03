@@ -2,58 +2,6 @@ const User = require('../models/user.model');
 const Course = require('../models/course.model');
 const Enrollment = require('../models/enrollment.model');
 
-/**
- * Get all users
- */
-const getAllUsers = async (page = 1, limit = 20, filters = {}) => {
-  const query = {};
-
-  if (filters.role) {
-    query.role = filters.role;
-  }
-
-  if (filters.department) {
-    query.department = filters.department;
-  }
-
-  if (filters.isActive !== undefined) {
-    query.isActive = filters.isActive;
-  }
-
-  const skip = (page - 1) * limit;
-
-  const users = await User.find(query)
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 })
-    .lean();
-
-  const total = await User.countDocuments(query);
-
-  return {
-    users,
-    pagination: {
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
-    },
-  };
-};
-
-/**
- * Get user by ID
- */
-const getUserById = async (userId) => {
-  const user = await User.findById(userId)
-    .populate('enrolledCourses', 'title courseCode semester year');
-
-  if (!user) {
-    throw new Error('User not found');
-  }
-
-  return user;
-};
 
 /**
  * Update user role
@@ -152,8 +100,6 @@ const getAdminStats = async () => {
 };
 
 module.exports = {
-  getAllUsers,
-  getUserById,
   updateUserRole,
   deactivateUser,
   activateUser,

@@ -15,7 +15,7 @@ const register = asyncHandler(async (req, res) => {
     password: z.string().min(6, "Password must be at least 6 characters"),
     department: z.string().min(1, "Department is required"),
     phone: z.string().optional(),
-    role: z.enum(["student", "faculty"]).default("student"),
+    role: z.enum(["student", "faculty", "admin"]).default("student"),
   });
 
   const parseData = registerSchema.safeParse(req.body);

@@ -149,16 +149,20 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
-/**
- * Check if user has specific role
- */
+
 const checkRole = (allowedRoles) => (req, res, next) => {
-  if (!req.user) {
-    return sendError(res, 'Not authenticated', 401);
+  if (!req.id) {
+    return res.status(401).json({
+      success : false,
+      message : "not authenticated"
+    })
   }
 
-  if (!allowedRoles.includes(req.user.role)) {
-    return sendError(res, 'Insufficient permissions', 403);
+  if (!allowedRoles.includes(req.role)) {
+    return res.status(403).json({
+      success : false,
+      message : "insufficient permissions"
+    })
   }
 
   next();
