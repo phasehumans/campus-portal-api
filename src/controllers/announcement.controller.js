@@ -1,15 +1,64 @@
 const { asyncHandler, sendSuccess, sendError, getPaginationParams } = require('../utils/responseHandler');
-const { createAnnouncementSchema, updateAnnouncementSchema } = require('../utils/validation');
+// const { createAnnouncementSchema, updateAnnouncementSchema } = require('../utils/validation');
 const announcementService = require('../services/announcementService');
+const {z} = require('zod');
+const { success } = require('zod/v4');
+const { AnnouncementModel } = require('../models/announcement.model');
 
-/**
- * Create announcement
- */
+
 const createAnnouncement = asyncHandler(async (req, res) => {
-  const validatedData = createAnnouncementSchema.parse(req.body);
-  const announcement = await announcementService.createAnnouncement(req.user._id, validatedData);
+  const createAnnouncementSchema = z.object({
+    title: z.string().min(5, "Title must be at least 5 characters").max(200),
+    content: z.string().min(10, 'Content must be at least 10 characters'),
+    category: z.enum(['academic', 'event', 'maintenance', 'general', 'urgent']).default('general'),
+    targetRoles: z.array(z.enum(['student', 'faculty', 'admin'])).default(['student', 'faculty']),
+    isPinned: z.boolean().default(false),
+  });
 
-  sendSuccess(res, announcement, 'Announcement created successfully', 201);
+  const parseData = createAnnouncementSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
+
+  const {title, content, category, targetRoles, isPinned} = parseData.data
+  const authorId = req.id
+
+  try {
+    const announcement = await AnnouncementModel.create({
+      title : title, 
+      content : content,
+      category : category,
+      targetRoles : targetRoles,
+      isPinned : isPinned,
+      author : authorId
+    })
+  
+    if(!announcement){
+      return res.status(400).json({
+        success : false,
+        message : "error while create announcement"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Announcement created successfully",
+      announcement : announcement
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
+
 });
 
 /**

@@ -1,14 +1,6 @@
 
 
-// const createApiKeySchema = z.object({
-//   name: z.string().min(1, 'API key name is required'),
-//   description: z.string().optional(),
-//   permissions: z.array(z.enum(['read', 'write', 'delete', 'admin'])).default(['read']),
-// });
 
-// /**
-//  * Announcement validation schemas
-//  */
 // const createAnnouncementSchema = z.object({
 //   title: z.string().min(5, 'Title must be at least 5 characters').max(200),
 //   content: z.string().min(10, 'Content must be at least 10 characters'),
