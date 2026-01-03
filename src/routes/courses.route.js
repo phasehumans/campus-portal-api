@@ -1,5 +1,5 @@
 const express = require('express');
-const courseController = require('../controllers/courseController');
+const courseController = require('../controllers/course.controller');
 const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();
@@ -20,7 +20,7 @@ router.put('/:id', checkRole(['admin']), courseController.updateCourse);
 router.delete('/:id', checkRole(['admin']), courseController.deleteCourse);
 
 // Materials routes (nested under courses)
-const materialController = require('../controllers/materialController');
+const materialController = require('../controllers/material.controller');
 
 router.get('/:courseId/materials', materialController.getCourseMaterials);
 router.get('/:courseId/materials/:materialId', materialController.getMaterialById);

@@ -1,5 +1,5 @@
 const express = require('express');
-const attendanceController = require('../controllers/attendanceController');
+const attendanceController = require('../controllers/attendance.controller');
 const { authMiddleware, checkRole } = require('../middleware/auth');
 
 const router = express.Router();

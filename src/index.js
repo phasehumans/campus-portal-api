@@ -8,13 +8,13 @@ const { applyMiddleware } = require('./middleware/commonMiddleware');
 
 const authRoutes = require('./routes/auth.route.js');
 const adminRoutes = require("./routes/admin.route.js");
-const announcementRoutes = require('./routes/announcements');
-const resultRoutes = require('./routes/results');
-const courseRoutes = require('./routes/courses');
-const notificationRoutes = require('./routes/notifications');
-const eventRoutes = require('./routes/events');
-const enrollmentRoutes = require('./routes/enrollments');
-const attendanceRoutes = require('./routes/attendance');
+const announcementRoutes = require('./routes/announcements.route.js');
+const resultRoutes = require('./routes/results.route.js');
+const courseRoutes = require('./routes/courses.route.js');
+const notificationRoutes = require('./routes/notifications.route.js');
+const eventRoutes = require('./routes/events.route.js');
+const enrollmentRoutes = require('./routes/enrollments.route.js');
+const attendanceRoutes = require('./routes/attendance.route.js');
 
 const app = express();
 

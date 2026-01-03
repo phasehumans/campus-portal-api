@@ -1,9 +1,6 @@
 const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
-const adminService = require('../services/adminService');
-// const { updateUserRoleSchema } = require('../utils/validation.js');
 const { UserModel } = require('../models/user.model.js');
 const { z } = require('zod');
-const { success } = require('zod/v4');
 const { CourseModel } = require('../models/course.model.js');
 const { EnrollmentModel } = require('../models/enrollment.model.js');
 
