@@ -1,18 +1,11 @@
-const {
-  asyncHandler,
-  sendSuccess,
-  sendError,
-} = require("../utils/responseHandler.js");
-
+const { asyncHandler } = require("../utils/responseHandler.js");
 const { z } = require("zod");
 const { UserModel } = require("../models/user.model.js");
 const bcrypt = require("bcrypt");
 const { sendEmail, emailTemplates } = require("../utils/email.js");
-const { success } = require("zod/v4");
 const jwt = require("jsonwebtoken");
-const { fa } = require("zod/v4/locales");
 const { ApikeyModel } = require("../models/apikey.model.js");
-const crypto = require('crypto')
+const crypto = require('crypto');
 
 const register = asyncHandler(async (req, res) => {
   const registerSchema = z.object({
@@ -253,7 +246,8 @@ const createApiKey = asyncHandler(async (req, res) => {
   if(!parseData.success){
     return res.status(400).json({
       success : false,
-      message : "invalid inputs"
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
     })
   }
 
@@ -265,12 +259,13 @@ const createApiKey = asyncHandler(async (req, res) => {
     const hashedKey = crypto.createHash('sha256').update(key).digest('hex');
   
     const apikey = await ApikeyModel.create({
-      user : userId,
-      name : name,
-      description : description,
-      permissions : permissions || ['read'],
-      key : hashedKey
-    })
+      user: userId,
+      name: name,
+      description: description,
+      permissions: permissions || ["read"],
+      key: hashedKey,
+      expiresAt: Date.now() + 1000 * 60 * 60 * 24 * 30
+    });
   
     return res.status(201).json({
       success: true,
@@ -286,29 +281,80 @@ const createApiKey = asyncHandler(async (req, res) => {
       errors : error.message
     })
   }
-
-  // const validatedData = createApiKeySchema.parse(req.body);
-  // const apiKey = await authService.createApiKey(req.user._id, validatedData);
-
-  // sendSuccess(res, apiKey, "API key created successfully", 201);
 });
 
-/**
- * List API keys
- */
 const listApiKeys = asyncHandler(async (req, res) => {
-  const apiKeys = await authService.listApiKeys(req.user._id);
-  sendSuccess(res, apiKeys, "API keys retrieved successfully");
+  const userId = req.id
+
+  try {
+    const allkeys = await ApikeyModel.find({
+      user : userId
+    })
+  
+    if(!allkeys){
+      return res.status(400).json({
+        success : false,
+        message : "no apikey found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "API keys retrieved successfully",
+      APIKEYS: allkeys.map((k) => ({
+        _id : k._id,
+        name : k.name,
+        description : k.description,
+        permission : k.permissions,
+        isActive : k.isActive,
+        // lastUsedAt : k.lastUsedAt,
+        createdAt : k.createdAt,
+        expiresAt : k.expiresAt
+      }))
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Revoke API key
- */
 const revokeApiKey = asyncHandler(async (req, res) => {
-  const result = await authService.revokeApiKey(req.user._id, req.params.keyId);
-  sendSuccess(res, result, "API key revoked successfully");
-});
+  const userId = req.id
+  const keyId = req.params.keyId
 
+  try {
+    const apiKey = await ApikeyModel.findOne({
+      _id : keyId,
+      user : userId
+    })
+  
+    if(!apiKey){
+      return res.status(400).json({
+        success : false,
+        message : "no API KEY found"
+      })
+    }
+  
+    apiKey.isActive = false
+    await apiKey.save()
+  
+    return res.status(200).json({
+      success: true,
+      message: "API key revoked successfully",
+      keyId : keyId,
+      apiStatus : apiKey.isActive
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "internal server error",
+      errors : error.message
+    })
+  }
+});
 
 
 module.exports = {

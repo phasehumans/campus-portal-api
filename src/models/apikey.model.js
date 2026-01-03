@@ -5,8 +5,8 @@ const apiKeySchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'user',
-      required: [true, 'User is required'],
+      ref: "user",
+      required: [true, "User is required"],
     },
     key: {
       type: String,
@@ -15,18 +15,19 @@ const apiKeySchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: [true, 'API Key name is required'],
+      required: [true, "API Key name is required"],
       trim: true,
     },
     permissions: [
       {
         type: String,
-        enum: ['read', 'write', 'delete', 'admin'],
+        enum: ["read", "write", "delete", "admin"],
       },
     ],
     expiresAt: {
       type: Date,
-      required: [true, 'Expiration date is required'],
+      required: [true, "Expiration date is required"],
+      default: () => Date.now() + 1000 * 60 * 60 * 24 * 30
     },
     isActive: {
       type: Boolean,
