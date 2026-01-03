@@ -1,7 +1,11 @@
 const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
 const adminService = require('../services/adminService');
-const { updateUserRoleSchema } = require('../utils/validation.js');
+// const { updateUserRoleSchema } = require('../utils/validation.js');
 const { UserModel } = require('../models/user.model.js');
+const { z } = require('zod');
+const { success } = require('zod/v4');
+const { CourseModel } = require('../models/course.model.js');
+const { EnrollmentModel } = require('../models/enrollment.model.js');
 
 
 const getAllUsers = asyncHandler(async (req, res) => {
@@ -82,43 +86,187 @@ const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Update user role (Admin only)
- */
 const updateUserRole = asyncHandler(async (req, res) => {
-  const validatedData = updateUserRoleSchema.parse(req.body);
-  const user = await adminService.updateUserRole(req.params.id, validatedData.role);
+  const updateUserRoleSchema = z.object({
+    role: z.enum(["student", "faculty", "admin"])
+  })
 
-  sendSuccess(res, user, 'User role updated successfully');
+  const parseData = updateUserRoleSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs"
+    })
+  }
+
+  const {role} = parseData.data
+  const userId = req.params.id
+
+  try {
+    const user = await UserModel.findByIdAndUpdate(
+      userId, 
+      {
+        role : role,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!user){
+      return res.status(400).json({
+        success : false,
+        message : "user not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "user role updated successfully",
+      updatedRole : user.role
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Deactivate user
- */
 const deactivateUser = asyncHandler(async (req, res) => {
-  const user = await adminService.deactivateUser(req.params.id);
-  sendSuccess(res, user, 'User deactivated successfully');
+  const userId = req.params.id
+
+  try {
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        isActive : false,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!user){
+      return res.status(400).json({
+        success : false,
+        message : "user not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "user deactivated successfully"
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Activate user
- */
 const activateUser = asyncHandler(async (req, res) => {
-  const user = await adminService.activateUser(req.params.id);
-  sendSuccess(res, user, 'User activated successfully');
+  const userId = req.params.id
+
+  try {
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        isActive : true,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!user){
+      return res.status(400).json({
+        success : false,
+        message : "user not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success : true,
+      message : "user activated successfully"
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+  
 });
 
-/**
- * Get admin statistics
- */
 const getStats = asyncHandler(async (req, res) => {
-  const stats = await adminService.getAdminStats();
-  sendSuccess(res, stats, 'Statistics retrieved successfully');
+  try {
+    const totalUsers = await UserModel.countDocuments()
+  
+    const usersByRole = await UserModel.aggregate([
+      {
+        $group : {
+          _id : '$role',
+          count : { $sum : 1},
+        }
+      }
+    ])
+  
+    const totalCourses = await CourseModel.countDocuments()
+    const totalEnrollments = await EnrollmentModel.countDocuments()
+  
+    const activeCourses = await CourseModel.countDocuments({
+      isActive : true
+    })
+    const activeUsers = await UserModel.countDocuments({
+      isActive : true
+    })
+    
+    return res.status(200).json({
+      success: true,
+      message: "Statistics retrieved successfully",
+      users : {
+        total : totalUsers,
+        active : activeUsers,
+        byRole : usersByRole.reduce((acc, item) => {
+          acc[item._id] = item.count
+          return acc
+        }, {})
+      }, 
+      courses : {
+        total : totalCourses,
+        active : activeCourses
+      },
+      enrollements : {
+        total : totalEnrollments
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+  
 });
 
 
 module.exports = {
   getAllUsers : getAllUsers,
   getUserById : getUserById,
-  
+  updateUserRole : updateUserRole,
+  deactivateUser : deactivateUser,
+  activateUser : activateUser,
+  getStats : getStats
 };
