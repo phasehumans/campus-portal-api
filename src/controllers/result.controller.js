@@ -1,5 +1,4 @@
-const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler');
-const { createResultSchema, updateResultSchema } = require('../utils/validation');
+const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
 const resultService = require('../services/resultService');
 
 /**
