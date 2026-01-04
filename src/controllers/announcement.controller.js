@@ -155,32 +155,98 @@ const getAnnouncementById = asyncHandler(async (req, res) => {
 
 });
 
-/**
- * Update announcement
- */
 const updateAnnouncement = asyncHandler(async (req, res) => {
-  const validatedData = updateAnnouncementSchema.parse(req.body);
-  const announcement = await announcementService.updateAnnouncement(
-    req.params.id,
-    validatedData,
-    req.user._id,
-    req.user.role
-  );
+  const updateAnnouncementSchema = z.object({
+    title: z.string().min(5, "Title must be at least 5 characters").max(200).optional(),
+    content: z.string().min(10, 'Content must be at least 10 characters').optional(),
+    category: z.enum(['academic', 'event', 'maintenance', 'general', 'urgent']).default('general').optional(),
+    targetRoles: z.array(z.enum(['student', 'faculty', 'admin'])).default(['student', 'faculty']).optional(),
+    isPinned: z.boolean().default(false).optional(),
+  })
+  const parseData = updateAnnouncementSchema.safeParse(req.body)
+  
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
 
-  sendSuccess(res, announcement, 'Announcement updated successfully');
+  const { title, content, category, targetRoles, isPinned } = parseData.data
+  const announcementId = req.params.id
+  const authorId = req.id
+
+  try {
+    const announcement = await AnnouncementModel.findByIdAndUpdate(
+      announcementId,
+      {
+        title : title,
+        content : content,
+        category : category,
+        targetRoles : targetRoles,
+        isPinned : isPinned,
+        author : authorId,
+        updatedAt : new Date()
+      }, {
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!announcement){
+      return res.status(400).json({
+        success : false,
+        message : "announcement not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Announcement updated successfully",
+      announcement : announcement
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Delete announcement
- */
 const deleteAnnouncement = asyncHandler(async (req, res) => {
-  const result = await announcementService.deleteAnnouncement(
-    req.params.id,
-    req.user._id,
-    req.user.role
-  );
+  const announcementId = req.params.id
+  const userId = req.id
 
-  sendSuccess(res, result, 'Announcement deleted successfully');
+  try {
+    const announcement = await AnnouncementModel.find({
+      _id : announcementId,
+      author : userId
+    })
+  
+    if(!announcement){
+      return res.status(400).json({
+        success : false,
+        message : "announcemnt not found or unauthorized"
+      })
+    }
+  
+    await AnnouncementModel.findByIdAndDelete(announcementId)
+  
+    return res.status(200).json({
+      success: true,
+      message: "announcement deleted successfully"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
 module.exports = {

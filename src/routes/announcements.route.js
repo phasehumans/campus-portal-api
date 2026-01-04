@@ -12,7 +12,6 @@ router.get('/:id', getAnnouncementById);
 
 router.post('/', checkRole(['faculty', 'admin']), createAnnouncement);
 
-// Faculty and Admin only - update/delete (ownership check in controller)
 router.put('/:id', checkRole(['faculty', 'admin']), updateAnnouncement);
 router.delete('/:id', checkRole(['faculty', 'admin']), deleteAnnouncement);
 

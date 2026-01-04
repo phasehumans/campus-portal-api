@@ -2,63 +2,7 @@ const Announcement = require('../models/announcement.model');
 const Notification = require('../models/notification.model');
 
 
-/**
- * Get announcements with role-based filtering
- */
-const getAnnouncements = async (userRole, page = 1, limit = 20) => {
-  const skip = (page - 1) * limit;
 
-  const announcements = await Announcement.find({
-    isPublished: true,
-    targetRoles: userRole,
-  })
-    .populate('author', 'firstName lastName email')
-    .sort({ isPinned: -1, createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .lean();
-
-  const total = await Announcement.countDocuments({
-    isPublished: true,
-    targetRoles: userRole,
-  });
-
-  return {
-    announcements,
-    pagination: {
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
-    },
-  };
-};
-
-/**
- * Get single announcement
- */
-const getAnnouncementById = async (announcementId, userId) => {
-  const announcement = await Announcement.findById(announcementId).populate(
-    'author',
-    'firstName lastName email'
-  );
-
-  if (!announcement) {
-    throw new Error('Announcement not found');
-  }
-
-  // Record view
-  const hasViewed = announcement.views.some(
-    v => v.user.toString() === userId
-  );
-
-  if (!hasViewed) {
-    announcement.views.push({ user: userId });
-    await announcement.save();
-  }
-
-  return announcement;
-};
 
 /**
  * Update announcement
