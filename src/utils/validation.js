@@ -1,29 +1,5 @@
 
 
-
-// const createAnnouncementSchema = z.object({
-//   title: z.string().min(5, 'Title must be at least 5 characters').max(200),
-//   content: z.string().min(10, 'Content must be at least 10 characters'),
-//   category: z.enum(['academic', 'event', 'maintenance', 'general', 'urgent']).default('general'),
-//   targetRoles: z.array(z.enum(['student', 'faculty', 'admin'])).default(['student', 'faculty']),
-//   isPinned: z.boolean().default(false),
-// });
-
-// const updateAnnouncementSchema = createAnnouncementSchema.partial();
-
-// /**
-//  * Result validation schemas
-//  */
-// const createResultSchema = z.object({
-//   student: z.string().min(1, 'Student ID is required'),
-//   course: z.string().min(1, 'Course ID is required'),
-//   marks: z.number().min(0).max(100, 'Marks must be between 0 and 100'),
-//   grade: z.enum(['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D', 'F']),
-//   semester: z.enum(['Fall', 'Spring', 'Summer']),
-//   year: z.number().int().min(2000),
-//   remarks: z.string().optional(),
-// });
-
 // const updateResultSchema = createResultSchema.partial();
 
 // /**

@@ -40,6 +40,10 @@ const resultSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    publishBy : {
+      type : mongoose.Types.ObjectId,
+      ref : 'user'
+    },
     remarks: {
       type: String,
       trim: true,

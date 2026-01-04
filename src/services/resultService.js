@@ -1,44 +1,7 @@
 const Result = require('../models/result.model');
 const Notification = require('../models/notification.model');
 
-/**
- * Create result (Admin only)
- */
-const createResult = async (data) => {
-  const { student, course, marks, grade, semester, year, remarks } = data;
 
-  // Check for duplicate
-  const existing = await Result.findOne({
-    student,
-    course,
-    semester,
-    year,
-  });
-
-  if (existing) {
-    throw new Error('Result already exists for this student and course');
-  }
-
-  const result = new Result({
-    student,
-    course,
-    marks,
-    grade,
-    semester,
-    year,
-    remarks,
-  });
-
-  await result.save();
-  await result.populate('student', 'firstName lastName email');
-  await result.populate('course', 'title courseCode');
-
-  return result;
-};
-
-/**
- * Publish results
- */
 const publishResults = async (resultIds, publishedBy) => {
   const results = await Result.updateMany(
     { _id: { $in: resultIds } },
