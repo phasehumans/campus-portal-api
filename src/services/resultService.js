@@ -172,11 +172,3 @@ const deleteResult = async (resultId) => {
   return { message: 'Result deleted successfully' };
 };
 
-module.exports = {
-  createResult,
-  publishResults,
-  getResults,
-  getStudentResults,
-  updateResult,
-  deleteResult,
-};

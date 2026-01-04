@@ -5,72 +5,72 @@ const resultService = require('../services/resultService');
  * Create result (Admin only)
  */
 const createResult = asyncHandler(async (req, res) => {
-  const validatedData = createResultSchema.parse(req.body);
-  const result = await resultService.createResult(validatedData);
+  // const validatedData = createResultSchema.parse(req.body);
+  // const result = await resultService.createResult(validatedData);
 
-  sendSuccess(res, result, 'Result created successfully', 201);
+  // sendSuccess(res, result, 'Result created successfully', 201);
 });
 
 /**
  * Publish results
  */
 const publishResults = asyncHandler(async (req, res) => {
-  const { resultIds } = req.body;
+  // const { resultIds } = req.body;
 
-  if (!Array.isArray(resultIds) || resultIds.length === 0) {
-    return sendSuccess(res, {}, 'No results to publish', 400);
-  }
+  // if (!Array.isArray(resultIds) || resultIds.length === 0) {
+  //   return sendSuccess(res, {}, 'No results to publish', 400);
+  // }
 
-  await resultService.publishResults(resultIds, req.user._id);
-  sendSuccess(res, {}, 'Results published successfully');
+  // await resultService.publishResults(resultIds, req.user._id);
+  // sendSuccess(res, {}, 'Results published successfully');
 });
 
 /**
  * Get results
  */
 const getResults = asyncHandler(async (req, res) => {
-  const { page, limit } = getPaginationParams(req.query);
-  const result = await resultService.getResults(req.user._id, req.user.role, { page, limit });
+  // const { page, limit } = getPaginationParams(req.query);
+  // const result = await resultService.getResults(req.user._id, req.user.role, { page, limit });
 
-  sendSuccess(res, result, 'Results retrieved successfully');
+  // sendSuccess(res, result, 'Results retrieved successfully');
 });
 
 /**
  * Get student results
  */
 const getStudentResults = asyncHandler(async (req, res) => {
-  const results = await resultService.getStudentResults(
-    req.params.studentId,
-    req.user._id,
-    req.user.role
-  );
+  // const results = await resultService.getStudentResults(
+  //   req.params.studentId,
+  //   req.user._id,
+  //   req.user.role
+  // );
 
-  sendSuccess(res, results, 'Student results retrieved successfully');
+  // sendSuccess(res, results, 'Student results retrieved successfully');
 });
 
 /**
  * Update result
  */
 const updateResult = asyncHandler(async (req, res) => {
-  const validatedData = updateResultSchema.parse(req.body);
-  const result = await resultService.updateResult(req.params.id, validatedData);
+  // const validatedData = updateResultSchema.parse(req.body);
+  // const result = await resultService.updateResult(req.params.id, validatedData);
 
-  sendSuccess(res, result, 'Result updated successfully');
+  // sendSuccess(res, result, 'Result updated successfully');
 });
 
 /**
  * Delete result
  */
 const deleteResult = asyncHandler(async (req, res) => {
-  const result = await resultService.deleteResult(req.params.id);
-  sendSuccess(res, result, 'Result deleted successfully');
+  // const result = await resultService.deleteResult(req.params.id);
+  // sendSuccess(res, result, 'Result deleted successfully');
 });
 
 module.exports = {
-  createResult,
-  publishResults,
-  getResults,
-  getStudentResults,
-  updateResult,
-  deleteResult,
+  createResult : createResult,
+  publishResults : publishResults,
+  getResults : getResults,
+  getStudentResults : getStudentResults,
+  updateResult : updateResult,
+  deleteResult : deleteResult,
 };

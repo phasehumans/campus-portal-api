@@ -14,7 +14,7 @@ const resultSchema = new mongoose.Schema(
     },
     semester: {
       type: String,
-      enum: ['Spring', 'Summer', 'Fall', 'Winter'],
+      enum: ['spring', 'summer', 'fall', 'winter'],
       required: [true, 'Semester is required'],
     },
     year: {

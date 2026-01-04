@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-// Public read access for all roles
 router.get('/', getAnnouncements);
 router.get('/:id', getAnnouncementById);
 

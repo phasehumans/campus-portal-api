@@ -1,84 +1,30 @@
-const Announcement = require('../models/announcement.model');
-const Notification = require('../models/notification.model');
+// const Announcement = require('../models/announcement.model');
+// const Notification = require('../models/notification.model');
 
+// const notifyUsersOfAnnouncement = async (announcement) => {
+//   try {
+//     const User = require('../models/user.model');
 
+//     const users = await User.find({
+//       role: { $in: announcement.targetRoles },
+//     });
 
+//     const notifications = users.map(user => ({
+//       recipient: user._id,
+//       title: `New ${announcement.category} Announcement`,
+//       message: announcement.title,
+//       type: 'announcement',
+//       relatedResource: {
+//         resourceType: 'announcement',
+//         resourceId: announcement._id,
+//       },
+//     }));
 
-/**
- * Update announcement
- */
-const updateAnnouncement = async (announcementId, data, userId) => {
-  const announcement = await Announcement.findById(announcementId);
-
-  if (!announcement) {
-    throw new Error('Announcement not found');
-  }
-
-  // Check ownership
-  if (announcement.author.toString() !== userId.toString() && userRole !== 'admin') {
-    throw new Error('Not authorized to update this announcement');
-  }
-
-  const { title, content, category, targetRoles, isPinned } = data;
-
-  announcement.title = title || announcement.title;
-  announcement.content = content || announcement.content;
-  announcement.category = category || announcement.category;
-  announcement.targetRoles = targetRoles || announcement.targetRoles;
-  announcement.isPinned = isPinned !== undefined ? isPinned : announcement.isPinned;
-  announcement.updatedAt = new Date();
-
-  await announcement.save();
-  return announcement;
-};
-
-/**
- * Delete announcement
- */
-const deleteAnnouncement = async (announcementId, userId, userRole) => {
-  const announcement = await Announcement.findById(announcementId);
-
-  if (!announcement) {
-    throw new Error('Announcement not found');
-  }
-
-  // Check ownership
-  if (announcement.author.toString() !== userId.toString() && userRole !== 'admin') {
-    throw new Error('Not authorized to delete this announcement');
-  }
-
-  await Announcement.findByIdAndDelete(announcementId);
-
-  return { message: 'Announcement deleted successfully' };
-};
-
-/**
- * Notify users of new announcement
- */
-const notifyUsersOfAnnouncement = async (announcement) => {
-  try {
-    const User = require('../models/user.model');
-
-    const users = await User.find({
-      role: { $in: announcement.targetRoles },
-    });
-
-    const notifications = users.map(user => ({
-      recipient: user._id,
-      title: `New ${announcement.category} Announcement`,
-      message: announcement.title,
-      type: 'announcement',
-      relatedResource: {
-        resourceType: 'announcement',
-        resourceId: announcement._id,
-      },
-    }));
-
-    if (notifications.length > 0) {
-      await Notification.insertMany(notifications);
-    }
-  } catch (error) {
-    console.error('Error creating notifications:', error);
-  }
-};
+//     if (notifications.length > 0) {
+//       await Notification.insertMany(notifications);
+//     }
+//   } catch (error) {
+//     console.error('Error creating notifications:', error);
+//   }
+// };
 
