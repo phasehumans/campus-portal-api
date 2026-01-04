@@ -1,29 +1,6 @@
 const Announcement = require('../models/announcement.model');
 const Notification = require('../models/notification.model');
 
-/**
- * Create announcement
- */
-const createAnnouncement = async (userId, data) => {
-  const { title, content, category, targetRoles, isPinned } = data;
-
-  const announcement = new Announcement({
-    title,
-    content,
-    author: userId,
-    category,
-    targetRoles: targetRoles || ['student', 'faculty'],
-    isPinned,
-  });
-
-  await announcement.save();
-  await announcement.populate('author', 'firstName lastName email');
-
-  // Create notifications for target roles
-  await notifyUsersOfAnnouncement(announcement);
-
-  return announcement;
-};
 
 /**
  * Get announcements with role-based filtering
@@ -161,11 +138,3 @@ const notifyUsersOfAnnouncement = async (announcement) => {
   }
 };
 
-module.exports = {
-  createAnnouncement,
-  getAnnouncements,
-  getAnnouncementById,
-  updateAnnouncement,
-  deleteAnnouncement,
-  notifyUsersOfAnnouncement,
-};

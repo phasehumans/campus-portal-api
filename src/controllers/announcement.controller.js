@@ -3,7 +3,7 @@ const { asyncHandler, sendSuccess, sendError, getPaginationParams } = require('.
 const announcementService = require('../services/announcementService');
 const {z} = require('zod');
 const { success } = require('zod/v4');
-const { AnnouncementModel } = require('../models/announcement.model');
+const { AnnouncementModel } = require('../models/announcement.model.js');
 
 
 const createAnnouncement = asyncHandler(async (req, res) => {
@@ -61,22 +61,98 @@ const createAnnouncement = asyncHandler(async (req, res) => {
 
 });
 
-/**
- * Get announcements
- */
 const getAnnouncements = asyncHandler(async (req, res) => {
-  const { page, limit } = getPaginationParams(req.query);
-  const result = await announcementService.getAnnouncements(req.user.role, page, limit);
+  const userRole = req.role
+  const { page, limit } = getPaginationParams(req.query)
+  const skip = (page - 1) * limit;
 
-  sendSuccess(res, result, 'Announcements retrieved successfully');
+  try {
+    const allannoucements = await AnnouncementModel.find({
+      isActive: true,
+      targetRoles: userRole,
+    })
+      .sort({ isPinned: -1, createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean()
+    
+    const total = await AnnouncementModel.countDocuments({
+      isActive : true,
+      targetRoles : userRole
+    })
+  
+    if(!allannoucements){
+      return res.status(400).json({
+        success : false,
+        message : "no announcement found"
+      })
+    }
+  
+    return res.status(200).json({
+      success : true,
+      message : "Announcements retrieved successfully",
+      announcements : allannoucements,
+      pagination : {
+        total : total,
+        pages : Math.ceil(total / limit),
+        curretPage : page,
+        limit : limit
+      }
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Get announcement by ID
- */
 const getAnnouncementById = asyncHandler(async (req, res) => {
-  const announcement = await announcementService.getAnnouncementById(req.params.id, req.user._id);
-  sendSuccess(res, announcement, 'Announcement retrieved successfully');
+  const announcementId = req.params.id;
+  const userId = req.id;
+
+  try {
+    const announcement = await AnnouncementModel.find({
+      _id: announcementId,
+    });
+  
+    if (!announcement) {
+      return res.status(400).json({
+        success: false,
+        message: "announcement not found",
+      });
+    }
+  
+    /* 
+    
+    // Record view
+    const hasViewed = announcement.views.some(
+      v => v.user.toString() === userId
+    );
+  
+    if (!hasViewed) {
+      announcement.views.push({ user: userId });
+      await announcement.save();
+    }
+  
+    */
+  
+    return res.status(200).json({
+      success: true,
+      message: "Announcement retrieved successfully",
+      announcement: announcement,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      succcess : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
 /**
@@ -108,9 +184,9 @@ const deleteAnnouncement = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  createAnnouncement,
-  getAnnouncements,
-  getAnnouncementById,
-  updateAnnouncement,
-  deleteAnnouncement,
+  createAnnouncement : createAnnouncement,
+  getAnnouncements : getAnnouncements,
+  getAnnouncementById : getAnnouncementById,
+  updateAnnouncement : updateAnnouncement,
+  deleteAnnouncement : deleteAnnouncement,
 };

@@ -10,7 +10,6 @@ router.use(authMiddleware);
 router.get('/', getAnnouncements);
 router.get('/:id', getAnnouncementById);
 
-// Faculty and Admin only - create
 router.post('/', checkRole(['faculty', 'admin']), createAnnouncement);
 
 // Faculty and Admin only - update/delete (ownership check in controller)
