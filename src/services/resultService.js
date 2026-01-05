@@ -1,82 +1,6 @@
 const Result = require('../models/result.model');
 const Notification = require('../models/notification.model');
 
-/**
- * Create result (Admin only)
- */
-const createResult = async (data) => {
-  const { student, course, marks, grade, semester, year, remarks } = data;
-
-  // Check for duplicate
-  const existing = await Result.findOne({
-    student,
-    course,
-    semester,
-    year,
-  });
-
-  if (existing) {
-    throw new Error('Result already exists for this student and course');
-  }
-
-  const result = new Result({
-    student,
-    course,
-    marks,
-    grade,
-    semester,
-    year,
-    remarks,
-  });
-
-  await result.save();
-  await result.populate('student', 'firstName lastName email');
-  await result.populate('course', 'title courseCode');
-
-  return result;
-};
-
-/**
- * Publish results
- */
-const publishResults = async (resultIds, publishedBy) => {
-  const results = await Result.updateMany(
-    { _id: { $in: resultIds } },
-    {
-      isPublished: true,
-      publishedAt: new Date(),
-      publishedBy,
-    }
-  );
-
-  // Notify students
-  const resultDocs = await Result.find({ _id: { $in: resultIds } })
-    .populate('student')
-    .populate('course');
-
-  for (const result of resultDocs) {
-    try {
-      await Notification.create({
-        recipient: result.student._id,
-        title: 'Results Published',
-        message: `Your results for ${result.course.title} have been published`,
-        type: 'result',
-        relatedResource: {
-          resourceType: 'result',
-          resourceId: result._id,
-        },
-      });
-    } catch (error) {
-      console.error('Error creating notification:', error);
-    }
-  }
-
-  return results;
-};
-
-/**
- * Get results based on role
- */
 const getResults = async (userId, userRole, query = {}) => {
   const filter = { isPublished: true };
 
@@ -172,11 +96,3 @@ const deleteResult = async (resultId) => {
   return { message: 'Result deleted successfully' };
 };
 
-module.exports = {
-  createResult,
-  publishResults,
-  getResults,
-  getStudentResults,
-  updateResult,
-  deleteResult,
-};

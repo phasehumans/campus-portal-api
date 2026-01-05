@@ -14,7 +14,7 @@ const resultSchema = new mongoose.Schema(
     },
     semester: {
       type: String,
-      enum: ['Spring', 'Summer', 'Fall', 'Winter'],
+      enum: ['spring', 'summer', 'fall', 'winter'],
       required: [true, 'Semester is required'],
     },
     year: {
@@ -39,6 +39,10 @@ const resultSchema = new mongoose.Schema(
     publishedAt: {
       type: Date,
       default: null,
+    },
+    publishBy : {
+      type : mongoose.Types.ObjectId,
+      ref : 'user'
     },
     remarks: {
       type: String,
