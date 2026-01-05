@@ -1,45 +1,6 @@
 const Result = require('../models/result.model');
 const Notification = require('../models/notification.model');
 
-
-const publishResults = async (resultIds, publishedBy) => {
-  const results = await Result.updateMany(
-    { _id: { $in: resultIds } },
-    {
-      isPublished: true,
-      publishedAt: new Date(),
-      publishedBy,
-    }
-  );
-
-  // Notify students
-  const resultDocs = await Result.find({ _id: { $in: resultIds } })
-    .populate('student')
-    .populate('course');
-
-  for (const result of resultDocs) {
-    try {
-      await Notification.create({
-        recipient: result.student._id,
-        title: 'Results Published',
-        message: `Your results for ${result.course.title} have been published`,
-        type: 'result',
-        relatedResource: {
-          resourceType: 'result',
-          resourceId: result._id,
-        },
-      });
-    } catch (error) {
-      console.error('Error creating notification:', error);
-    }
-  }
-
-  return results;
-};
-
-/**
- * Get results based on role
- */
 const getResults = async (userId, userRole, query = {}) => {
   const filter = { isPublished: true };
 
