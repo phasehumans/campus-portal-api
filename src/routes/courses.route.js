@@ -1,49 +1,33 @@
 const express = require('express');
-const courseController = require('../controllers/course.controller');
 const { authMiddleware, checkRole } = require('../middleware/auth');
+const { getAllCourses, getCourseById, enrollStudent, dropCourse, createCourse, updateCourse, deleteCourse } = require('../controllers/course.controller.js')
+const { getCourseMaterials, getMaterialById, createMaterial, createMaterial, updateMaterial, deleteMaterial, downloadMaterial } = require('../controllers/material.controller.js')
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
 // Public read access
-router.get('/', courseController.getAllCourses);
-router.get('/:id', courseController.getCourseById);
+router.get('/', getAllCourses);
+router.get('/:id', getCourseById);
 
 // Student enrollment
-router.post('/:courseId/enroll', courseController.enrollStudent);
-router.delete('/:courseId/drop', courseController.dropCourse);
+router.post('/:courseId/enroll', enrollStudent);
+router.delete('/:courseId/drop', dropCourse);
 
 // Admin only - create/update/delete
-router.post('/', checkRole(['admin']), courseController.createCourse);
-router.put('/:id', checkRole(['admin']), courseController.updateCourse);
-router.delete('/:id', checkRole(['admin']), courseController.deleteCourse);
+router.post('/', checkRole(['admin']), createCourse);
+router.put('/:id', checkRole(['admin']), updateCourse);
+router.delete('/:id', checkRole(['admin']), deleteCourse);
 
 // Materials routes (nested under courses)
-const materialController = require('../controllers/material.controller');
-
-router.get('/:courseId/materials', materialController.getCourseMaterials);
-router.get('/:courseId/materials/:materialId', materialController.getMaterialById);
+router.get('/:courseId/materials', getCourseMaterials);
+router.get('/:courseId/materials/:materialId', getMaterialById);
 
 // Faculty and Admin only
-router.post(
-  '/:courseId/materials',
-  checkRole(['faculty', 'admin']),
-  materialController.createMaterial
-);
-
-router.put(
-  '/:courseId/materials/:materialId',
-  checkRole(['faculty', 'admin']),
-  materialController.updateMaterial
-);
-
-router.delete(
-  '/:courseId/materials/:materialId',
-  checkRole(['faculty', 'admin']),
-  materialController.deleteMaterial
-);
-
-router.get('/:courseId/materials/:materialId/download', materialController.downloadMaterial);
+router.post('/:courseId/materials', checkRole(['faculty', 'admin']), createMaterial);
+router.put('/:courseId/materials/:materialId', checkRole(['faculty', 'admin']), updateMaterial);
+router.delete('/:courseId/materials/:materialId', checkRole(['faculty', 'admin']), deleteMaterial);
+router.get('/:courseId/materials/:materialId/download', downloadMaterial);
 
 module.exports = router;

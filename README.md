@@ -5,7 +5,7 @@ REST API for a campus management system with Role-Based Access Control (RBAC), f
 ## Core Features
 - **JWT Authentication & API Keys** - Secure token-based authentication with 7-day expiration
 - **RBAC System** - Three role types: Student, Faculty, Admin with permission-based access
-- **Course Management** - Create, manage, and enroll students with prerequisites
+- **Course Management** - Create, manage and enroll students with prerequisites
 - **Results Publishing** - Admin-controlled grade management with email notifications
 - **Announcements & Materials** - Faculty can post announcements and upload learning materials
 - **Attendance & Events** - Track attendance and manage campus events with registration
@@ -96,31 +96,6 @@ campus-portal-api/
 - `PUT /notifications/mark-all-read` - Mark all as read
 - `DELETE /notifications/:id` - Delete notification
 
-
-### RBAC Authorization
-
-```
-                User Makes Request
-                        │
-                        ▼
-            ┌───────────────────────┐
-            │ Check req.user.role   │
-            └───────┬───────────────┘
-                    │
-         ┌──────────┼──────────┐
-         │          │          │
-         ▼          ▼          ▼
-    Student?   Faculty?   Admin?
-         │          │          │
-    Can do:     Can do:    Can do:
-    • View own  • Create   • Everything
-      announcements announcements
-    • View own  • Upload
-      results     materials
-    • Enroll    • View
-    • Download  student
-      materials  results
-```
 
 ## User Workflows
 
@@ -319,4 +294,28 @@ campus-portal-api/
    │ 5. Configure access policies    │
    │ 6. Monitor suspicious activity  │
    └─────────────────────────────────┘
+```
+### RBAC Authorization
+
+```
+                User Makes Request
+                        │
+                        ▼
+            ┌───────────────────────┐
+            │ Check req.user.role   │
+            └───────┬───────────────┘
+                    │
+         ┌──────────┼──────────┐
+         │          │          │
+         ▼          ▼          ▼
+    Student?   Faculty?   Admin?
+         │          │          │
+    Can do:     Can do:    Can do:
+    • View own  • Create   • Everything
+      announcements announcements
+    • View own  • Upload
+      results     materials
+    • Enroll    • View
+    • Download  student
+      materials  results
 ```
