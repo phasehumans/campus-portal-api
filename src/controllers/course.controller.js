@@ -1,8 +1,10 @@
-const { success } = require('zod/v4');
 const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler');
-const { createCourseSchema, updateCourseSchema } = require('../utils/validation');
 const { z } = require('zod');
 const { CourseModel } = require('../models/course.model');
+const {EnrollmentModel} = require('../models/enrollment.model.js');
+const { UserModel } = require('../models/user.model.js');
+const { sendEmail, emailTemplates } = require('../utils/email.js');
+const { success } = require('zod/v4');
 
 
 const createCourse = asyncHandler(async (req, res) => {
@@ -147,7 +149,6 @@ const getCourseById = asyncHandler(async (req, res) => {
   }
 });
 
-
 const updateCourse = asyncHandler(async (req, res) => {
   const updateCourseSchema = z.object({
     title: z.string().min(5, "Title must be at least 5 characters").optional(),
@@ -215,7 +216,6 @@ const updateCourse = asyncHandler(async (req, res) => {
 
 });
 
-
 const deleteCourse = asyncHandler(async (req, res) => {
   const courseId = req.params.id
 
@@ -243,20 +243,123 @@ const deleteCourse = asyncHandler(async (req, res) => {
 
 });
 
-/**
- * Enroll student
- */
 const enrollStudent = asyncHandler(async (req, res) => {
-  // const enrollment = await courseService.enrollStudent(req.user._id, req.params.courseId);
-  // sendSuccess(res, enrollment, 'Student enrolled successfully', 201);
+  const userId = req.id;
+  const courseId = req.params.courseId;
+
+  try {
+    const course = await CourseModel.findById(courseId);
+  
+    if (!course) {
+      return res.status(400).json({
+        success: false,
+        message: "course not found",
+      });
+    }
+  
+    if (course.enrolled.length >= course.capacity) {
+      return res.status(400).json({
+        success: false,
+        message: "Course is full",
+      });
+    }
+  
+    if (course.enrolled.includes(userId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Student already enrolled in this course",
+      });
+    }
+  
+    const enrollment = await EnrollmentModel.create({
+      student: userId,
+      course: courseId,
+      status: "active",
+      enrolledAt: new Date(),
+    });
+  
+    course.enrolled.push(userId);
+    await course.save();
+  
+    const user = await UserModel.findByIdAndUpdate(
+      userId,
+      {
+        $push: { enrolledCourses: courseId },
+      },
+      {
+        new: true,
+      }
+    );
+  
+    try {
+      await sendEmail(
+        user.email,
+        'Enrollment Confirmed',
+        emailTemplates.enrollmentConfirmation(user.firstName, course.title)
+      )
+    } catch (error) {
+      console.log('email send fail', error)
+    }
+  
+    return res.status(201).json({
+      success: true,
+      message: "Student enrolled successfully",
+      enrollment : enrollment
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Drop course
- */
 const dropCourse = asyncHandler(async (req, res) => {
-  // const enrollment = await courseService.dropCourse(req.user._id, req.params.courseId);
-  // sendSuccess(res, enrollment, 'Course dropped successfully');
+  const userId = req.id
+  const courseId = req.params.id
+
+  try {
+    const course = await CourseModel.findByIdAndUpdate(
+      courseId,
+      {
+        $pull : { enrolled : userId}
+      },{
+        new : true
+      }
+    );
+  
+    if(!course){
+      return res.status(400).json({
+        success : false,
+        message : "course not found"
+      })
+    }
+  
+    const enrollment = await EnrollmentModel.findOneAndUpdate({
+      student : userId,
+      course : courseId
+    }, {
+      status : 'dropped',
+      updatedAt : new Date()
+    }, {
+      new : true
+    })
+  
+    return res.status(200).json({
+      success: true,
+      message: "Course dropped successfully",
+      enrollment : enrollment
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
 module.exports = {
