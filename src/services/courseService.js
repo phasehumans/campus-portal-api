@@ -207,12 +207,3 @@ const dropCourse = async (studentId, courseId) => {
   return enrollment;
 };
 
-module.exports = {
-  createCourse,
-  getAllCourses,
-  getCourseById,
-  updateCourse,
-  deleteCourse,
-  enrollStudent,
-  dropCourse,
-};
