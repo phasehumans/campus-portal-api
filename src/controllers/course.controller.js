@@ -110,7 +110,7 @@ const getAllCourses = asyncHandler(async (req, res) => {
         limit : limit
       }
     });
-    
+
   } catch (error) {
     return res.status(500).json({
       succes : false,
@@ -120,30 +120,127 @@ const getAllCourses = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Get course by ID
- */
 const getCourseById = asyncHandler(async (req, res) => {
-  // const course = await courseService.getCourseById(req.params.id);
-  // sendSuccess(res, course, 'Course retrieved successfully');
+  const courseId = req.params.id
+
+  try {
+    const course = await CourseModel.findById(courseId)
+  
+    if(!course){
+      return res.status(400).json({
+        success : false,
+        message : "course not found",
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Course retrieved successfully",
+      course : course
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Update course
- */
+
 const updateCourse = asyncHandler(async (req, res) => {
-  // const validatedData = updateCourseSchema.parse(req.body);
-  // const course = await courseService.updateCourse(req.params.id, validatedData);
+  const updateCourseSchema = z.object({
+    title: z.string().min(5, "Title must be at least 5 characters").optional(),
+    description: z.string().optional(),
+    credits: z.number().min(1).max(10).optional(),
+    maxStudents: z.number().min(1).optional(),
+    schedule: z
+      .object({
+        days: z.array(z.string()).optional(),
+        time: z.string().optional(),
+        location: z.string().optional(),
+      })
+      .optional(),
+  });
 
-  // sendSuccess(res, course, 'Course updated successfully');
+  const parseData = updateCourseSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
+
+  const { title, description, credits, maxStudents, schedule} = parseData.data
+  const courseId = req.params.id
+
+  try {
+    const course = await CourseModel.findByIdAndUpdate(
+      courseId,
+      {
+        title : title,
+        description : description,
+        credits : credits,
+        maxStudents : maxStudents,
+        schedule : schedule,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!course){
+      return res.status(400).json({
+        success: false,
+        message: "Course not found",
+      });
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Course updated successfully",
+      course : course
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
-/**
- * Delete course
- */
+
 const deleteCourse = asyncHandler(async (req, res) => {
-  // const result = await courseService.deleteCourse(req.params.id);
-  // sendSuccess(res, result, 'Course deleted successfully');
+  const courseId = req.params.id
+
+  try {
+    const course = await CourseModel.findByIdAndDelete(courseId)
+  
+    if(!course){
+      return res.status(400).json({
+        success : false,
+        message : "course not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Course deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
 /**
