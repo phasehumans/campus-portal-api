@@ -4,7 +4,6 @@ const { CourseModel } = require('../models/course.model');
 const {EnrollmentModel} = require('../models/enrollment.model.js');
 const { UserModel } = require('../models/user.model.js');
 const { sendEmail, emailTemplates } = require('../utils/email.js');
-const { success } = require('zod/v4');
 
 
 const createCourse = asyncHandler(async (req, res) => {
@@ -51,14 +50,14 @@ const createCourse = asyncHandler(async (req, res) => {
   
     const course = await CourseModel.create({
       courseCode : courseCode,
-      title : title,
+      name : title,
       description : description,
       credits : credits,
       instructor : instructor,
       department : department,
       semester : semester,
       year : year,
-      maxStudents : maxStudents,
+      capacity : maxStudents,
       schedule : schedule
     })
   
@@ -181,10 +180,10 @@ const updateCourse = asyncHandler(async (req, res) => {
     const course = await CourseModel.findByIdAndUpdate(
       courseId,
       {
-        title : title,
+        name : title,
         description : description,
         credits : credits,
-        maxStudents : maxStudents,
+        capacity : maxStudents,
         schedule : schedule,
         updatedAt : new Date()
       },{
@@ -276,6 +275,8 @@ const enrollStudent = asyncHandler(async (req, res) => {
       course: courseId,
       status: "active",
       enrolledAt: new Date(),
+      year : course.year,
+      semester : course.semester
     });
   
     course.enrolled.push(userId);
@@ -317,7 +318,7 @@ const enrollStudent = asyncHandler(async (req, res) => {
 
 const dropCourse = asyncHandler(async (req, res) => {
   const userId = req.id
-  const courseId = req.params.id
+  const courseId = req.params.courseId
 
   try {
     const course = await CourseModel.findByIdAndUpdate(

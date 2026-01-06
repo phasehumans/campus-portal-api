@@ -1,8 +1,7 @@
 # Campus Portal API
 
-REST API for a campus management system with Role-Based Access Control (RBAC), featuring JWT authentication, API keys, email notifications and comprehensive course management.
+REST API for a campus management system with Role-Based Access Control (RBAC), featuring JWT authentication, API keys, email notifications and comprehensive course management
 
-## Core Features
 - **JWT Authentication & API Keys** - Secure token-based authentication with 7-day expiration
 - **RBAC System** - Three role types: Student, Faculty, Admin with permission-based access
 - **Course Management** - Create, manage and enroll students with prerequisites
@@ -19,15 +18,18 @@ campus-portal-api/
 ├── src/
 │   ├── index.js                    # Express app entry point
 │   ├── config/database.js          # MongoDB connection
-│   ├── models/                     # Mongoose schemas (10 models)
-│   ├── services/                   # Business logic (10 services)
-│   ├── controllers/                # Request handlers (10 controllers)
-│   ├── routes/                     # API routes (9 route files)
+│   ├── models/                     # Mongoose schemas
+│   ├── controllers/                # Request handlers
+│   ├── routes/                     # API routes
 │   ├── middleware/                 # Auth, error handling, CORS
 │   └── utils/                      # Auth, RBAC, validation, email
-├── tests/                          # Jest test suite (6 files)
-├── package.json, jest.config.js    # Config files
-└── README.md                       # Documentation
+├── tests/                          # Jest test
+├── .env.example
+├── .gitignore
+├── jest.config.js
+├── package-lock.json
+├── package.json
+└── README.md                       
 ```
 
 
@@ -42,47 +44,47 @@ campus-portal-api/
 - `DELETE /auth/api-keys/:keyId` - Revoke API key
 
 ### Announcements
-- `POST /announcements` - Create (Faculty/Admin)
+- `POST /announcements` - Create (faculty/admin)
 - `GET /announcements` - Get all (all roles)
 - `GET /announcements/:id` - Get one (all roles)
-- `PUT /announcements/:id` - Update (Faculty/Admin)
-- `DELETE /announcements/:id` - Delete (Faculty/Admin)
+- `PUT /announcements/:id` - Update (faculty/admin)
+- `DELETE /announcements/:id` - Delete (faculty/admin)
 
 ### Courses
-- `POST /courses` - Create (Admin only)
+- `POST /courses` - Create (admin only)
 - `GET /courses` - Get all (all roles)
 - `GET /courses/:id` - Get one (all roles)
-- `POST /courses/:courseId/enroll` - Enroll (Students)
-- `DELETE /courses/:courseId/drop` - Drop (Students)
-- `PUT /courses/:id` - Update (Admin)
-- `DELETE /courses/:id` - Delete (Admin)
+- `POST /courses/:courseId/enroll` - Enroll (students)
+- `DELETE /courses/:courseId/drop` - Drop (students)
+- `PUT /courses/:id` - Update (admin)
+- `DELETE /courses/:id` - Delete (admin)
 
 ### Course Materials
-- `POST /courses/:courseId/materials` - Upload (Faculty/Admin)
+- `POST /courses/:courseId/materials` - Upload (faculty/admin)
 - `GET /courses/:courseId/materials` - List (all roles)
 - `GET /courses/:courseId/materials/:materialId` - Get one (all roles)
-- `PUT /courses/:courseId/materials/:materialId` - Update (Faculty/Admin)
-- `DELETE /courses/:courseId/materials/:materialId` - Delete (Faculty/Admin)
+- `PUT /courses/:courseId/materials/:materialId` - Update (faculty/admin)
+- `DELETE /courses/:courseId/materials/:materialId` - Delete (faculty/admin)
 - `GET /courses/:courseId/materials/:materialId/download` - Download (all roles)
 
 ### Results
-- `POST /results` - Create (Admin only)
+- `POST /results` - Create (admin only)
 - `GET /results` - Get results (role-based)
 - `GET /results/:studentId` - Get student results (role-based)
-- `POST /results/publish` - Publish results (Admin)
-- `PUT /results/:id` - Update (Admin)
-- `DELETE /results/:id` - Delete (Admin)
+- `POST /results/publish` - Publish results (admin)
+- `PUT /results/:id` - Update (admin)
+- `DELETE /results/:id` - Delete (admin)
 
 ### Events
-- `POST /events` - Create (Admin/Faculty)
+- `POST /events` - Create (admin/faculty)
 - `GET /events` - Get all (all roles)
 - `GET /events/:id` - Get one (all roles)
 - `POST /events/:id/register` - Register (all roles)
 - `DELETE /events/:id/register` - Unregister (all roles)
-- `PUT /events/:id` - Update (Admin/Faculty)
-- `DELETE /events/:id` - Delete (Admin)
+- `PUT /events/:id` - Update (admin/faculty)
+- `DELETE /events/:id` - Delete (admin)
 
-### Admin Routes (Admin only)
+### Admin Routes
 - `GET /admin/users` - List all users
 - `GET /admin/users/:id` - Get user details
 - `PUT /admin/users/:id/role` - Update user role
@@ -110,7 +112,7 @@ campus-portal-api/
    ┌────────────────────────────────┐
    │ 1. Register with email         │
    │ 2. Password hashing (bcrypt)   │
-   │ 3. Email verification (future) │
+   │ 3. Email verification          │
    │ 4. Login with credentials      │
    │ 5. Receive JWT token           │
    └────────────────────────────────┘
@@ -302,7 +304,7 @@ campus-portal-api/
                         │
                         ▼
             ┌───────────────────────┐
-            │ Check req.user.role   │
+            │   Check req.role      │
             └───────┬───────────────┘
                     │
          ┌──────────┼──────────┐
