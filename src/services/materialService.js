@@ -134,11 +134,3 @@ const recordDownload = async (materialId, userId) => {
   return material;
 };
 
-module.exports = {
-  createMaterial,
-  getCourseMaterials,
-  getMaterialById,
-  updateMaterial,
-  deleteMaterial,
-  recordDownload,
-};

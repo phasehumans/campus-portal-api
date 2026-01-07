@@ -10,7 +10,6 @@ router.use(authMiddleware);
 router.get('/', getAllCourses);
 router.get('/:id', getCourseById);
 
-// Student enrollment
 router.post('/:courseId/enroll', enrollStudent);
 router.delete('/:courseId/drop', dropCourse);
 
