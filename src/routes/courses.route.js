@@ -10,7 +10,6 @@ router.use(authMiddleware);
 router.get('/', getAllCourses);
 router.get('/:id', getCourseById);
 
-// Student enrollment
 router.post('/:courseId/enroll', enrollStudent);
 router.delete('/:courseId/drop', dropCourse);
 
@@ -18,11 +17,9 @@ router.post('/', checkRole(['admin']), createCourse);
 router.put('/:id', checkRole(['admin']), updateCourse);
 router.delete('/:id', checkRole(['admin']), deleteCourse);
 
-// Materials routes (nested under courses)
 router.get('/:courseId/materials', getCourseMaterials);
 router.get('/:courseId/materials/:materialId', getMaterialById);
 
-// Faculty and Admin only
 router.post('/:courseId/materials', checkRole(['faculty', 'admin']), createMaterial);
 router.put('/:courseId/materials/:materialId', checkRole(['faculty', 'admin']), updateMaterial);
 router.delete('/:courseId/materials/:materialId', checkRole(['faculty', 'admin']), deleteMaterial);

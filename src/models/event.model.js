@@ -32,7 +32,7 @@ const eventSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ['Academic', 'Sports', 'Cultural', 'Workshop', 'Seminar', 'Other'],
+      enum: ['academic', 'sports', 'cultural', 'workshop', 'seminar', 'other'],
       default: 'Other',
     },
     capacity: {

@@ -94,9 +94,3 @@ const getCourseEnrollmentStats = async (courseId) => {
   return stats;
 };
 
-module.exports = {
-  getStudentEnrollments,
-  getCourseEnrollments,
-  updateEnrollmentStatus,
-  getCourseEnrollmentStats,
-};

@@ -1,33 +1,21 @@
 const express = require('express');
-const enrollmentController = require('../controllers/enrollment.controller');
 const { authMiddleware, checkRole } = require('../middleware/auth');
+const { getStudentEnrollments, getCourseEnrollments, getEnrollmentStats, updateEnrollment} = require('../controllers/enrollment.controller.js')
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
 // Get my enrollments (student)
-router.get('/my-enrollments', enrollmentController.getStudentEnrollments);
+router.get('/my-enrollments', getStudentEnrollments);
 
 // Get course enrollments (Faculty/Admin)
-router.get(
-  '/course/:courseId',
-  checkRole(['faculty', 'admin']),
-  enrollmentController.getCourseEnrollments
-);
+router.get('/course/:courseId', checkRole(['faculty', 'admin']), getCourseEnrollments);
 
 // Get enrollment statistics (Faculty/Admin)
-router.get(
-  '/course/:courseId/stats',
-  checkRole(['faculty', 'admin']),
-  enrollmentController.getEnrollmentStats
-);
+router.get('/course/:courseId/stats', checkRole(['faculty', 'admin']), getEnrollmentStats);
 
 // Update enrollment (Admin only)
-router.put(
-  '/:enrollmentId',
-  checkRole(['admin']),
-  enrollmentController.updateEnrollment
-);
+router.put('/:enrollmentId', checkRole(['admin']), updateEnrollment);
 
 module.exports = router;
