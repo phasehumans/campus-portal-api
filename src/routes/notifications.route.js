@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-// Get notifications
 router.get('/', getNotifications);
 
 // Mark as read
