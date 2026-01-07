@@ -92,10 +92,3 @@ const createNotification = async (userId, data) => {
   return notification;
 };
 
-module.exports = {
-  getUserNotifications,
-  markAsRead,
-  markAllAsRead,
-  deleteNotification,
-  createNotification,
-};
