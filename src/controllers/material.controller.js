@@ -202,26 +202,69 @@ const updateMaterial = asyncHandler(async (req, res) => {
 const deleteMaterial = asyncHandler(async (req, res) => {
   const materialId = req.params.materialId
 
-  const material = await MaterialModel.findByIdAndDelete(materialId)
-
-  if(!material){
-    return res.status(400).json({
+  try {
+    const material = await MaterialModel.findByIdAndDelete(materialId)
+  
+    if(!material){
+      return res.status(400).json({
+        success : false,
+        message : "material not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Material deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
       success : false,
-      message : "material not found"
+      message : "server error",
+      errors : error.message
     })
   }
-
-  return res.st
-  // const result = await materialService.deleteMaterial(req.params.materialId);
-  // sendSuccess(res, result, 'Material deleted successfully');
 });
 
-/**
- * Download material
- */
 const downloadMaterial = asyncHandler(async (req, res) => {
-  // const material = await materialService.recordDownload(req.params.materialId, req.user._id);
-  // sendSuccess(res, { downloadUrl: material.fileUrl }, 'Download link generated');
+  const materialId = req.params.materialId;
+  const userId = req.id
+
+  try {
+    const material = await MaterialModel.findByIdAndUpdate(
+      materialId,
+      {
+        $push : {
+          downloadedBy : {
+            user : userId,
+            downloadedAt : new Date()
+          }
+        }
+      },
+      {
+        new : true
+      }
+    )
+  
+    if(!material){
+      return res.status(400).json({
+        success : false,
+        message : "material not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Download link generated",
+      downloadLink : material.fileUrl
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : true,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
 module.exports = {
