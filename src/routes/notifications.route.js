@@ -8,11 +8,9 @@ router.use(authMiddleware);
 
 router.get('/', getNotifications);
 
-// Mark as read
 router.put('/:id/read', markAsRead);
 router.put('/mark-all-read', markAllAsRead);
 
-// Delete
 router.delete('/:id', deleteNotification);
 
 module.exports = router;

@@ -104,7 +104,7 @@ const markAllAsRead = asyncHandler(async (req, res) => {
       message: "All notifications marked as read",
       notification : notification
     });
-    
+
   } catch (error) {
     return res.status(500).json({
       success : false,
@@ -115,12 +115,36 @@ const markAllAsRead = asyncHandler(async (req, res) => {
  
 });
 
-/**
- * Delete notification
- */
 const deleteNotification = asyncHandler(async (req, res) => {
-  // const result = await notificationService.deleteNotification(req.params.id, req.user._id);
-  // sendSuccess(res, result, 'Notification deleted successfully');
+  const notificationId = req.params.id
+  const userId = req.id
+
+ try {
+   const notification = await NotificationModel.findOneAndDelete({
+     _id : notificationId,
+     recipient : userId
+   })
+ 
+   if(!notification){
+     return res.status(400).json({
+       success : false,
+       message : "notification not found"
+     })
+   }
+ 
+   return res.status(200).json({
+     success : true,
+     message : "Notification deleted successfully",
+     notification : notification
+   });
+ } catch (error) {
+  return res.status(500).json({
+    success : false,
+    message : "server error",
+    errors : error.message
+  })
+ }
+
 });
 
 module.exports = {
