@@ -1,43 +1,4 @@
 
-
-// const updateResultSchema = createResultSchema.partial();
-
-// /**
-//  * Course validation schemas
-//  */
-// const createCourseSchema = z.object({
-//   courseCode: z.string().min(1, 'Course code is required').toUpperCase(),
-//   title: z.string().min(5, 'Title must be at least 5 characters'),
-//   description: z.string().optional(),
-//   credits: z.number().min(1).max(10),
-//   instructor: z.string().min(1, 'Instructor ID is required'),
-//   department: z.string().min(1, 'Department is required'),
-//   semester: z.enum(['Fall', 'Spring', 'Summer']),
-//   year: z.number().int().min(2000),
-//   maxStudents: z.number().min(1),
-//   schedule: z.object({
-//     days: z.array(z.string()).optional(),
-//     time: z.string().optional(),
-//     location: z.string().optional(),
-//   }).optional(),
-// });
-
-// const updateCourseSchema = createCourseSchema.partial();
-
-// /**
-//  * Material validation schemas
-//  */
-// const createMaterialSchema = z.object({
-//   title: z.string().min(1, 'Title is required'),
-//   description: z.string().optional(),
-//   type: z.enum(['lecture', 'assignment', 'reading', 'video', 'document', 'other']),
-//   fileName: z.string().min(1, 'File name is required'),
-//   fileSize: z.number().min(1),
-//   dueDate: z.string().datetime().optional().or(z.null()),
-// });
-
-// const updateMaterialSchema = createMaterialSchema.partial();
-
 // /**
 //  * Event validation schemas
 //  */
