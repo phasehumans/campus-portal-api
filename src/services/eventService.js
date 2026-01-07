@@ -167,33 +167,5 @@ const deleteEvent = async (eventId) => {
   return { message: 'Event deleted successfully' };
 };
 
-/**
- * Notify users of event creation
- */
-const notifyEventCreation = async (event) => {
-  try {
-    const User = require('../models/user.model');
 
-    const users = await User.find({
-      role: { $in: event.visibleTo },
-    });
-
-    const notifications = users.map(user => ({
-      recipient: user._id,
-      title: `New ${event.category} Event`,
-      message: `${event.title} on ${event.startDate.toDateString()}`,
-      type: 'event',
-      relatedResource: {
-        resourceType: 'event',
-        resourceId: event._id,
-      },
-    }));
-
-    if (notifications.length > 0) {
-      await Notification.insertMany(notifications);
-    }
-  } catch (error) {
-    console.error('Error creating event notifications:', error);
-  }
-};
 

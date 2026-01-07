@@ -124,16 +124,92 @@ const getEventById = asyncHandler(async (req, res) => {
 });
 
 const registerForEvent = asyncHandler(async (req, res) => {
-  // const event = await eventService.registerForEvent(req.params.id, req.user._id);
-  // sendSuccess(res, event, 'Registered for event successfully', 201);
+  const eventId = req.params.id
+  const userId = req.id
+
+  try {
+    const event = await EventModel.findById(eventId)
+  
+    if(!event){
+      return res.status(400).json({
+        success : false,
+        message : "event not found"
+      })
+    }
+  
+    if(event.registrations.length >= event.capacity){
+      return res.status(400).json({
+        success : false,
+        message : "event is full"
+      })
+    }
+  
+    const alreadyRegistered = event.registrations.some(
+      r => r.user.toString() === userId.toString()
+    )
+  
+    if(alreadyRegistered){
+      return res.status(400).json({
+        success : false,
+        message : "already registered for this event"
+      })
+    }
+  
+    event.registrations.push({user : userId})
+    await event.save()
+  
+    return res.status(201).json({
+      success: true,
+      message: "Registered for event successfully",
+      event : event
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : true,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Unregister from event
- */
 const unregisterFromEvent = asyncHandler(async (req, res) => {
-  // const event = await eventService.unregisterFromEvent(req.params.id, req.user._id);
-  // sendSuccess(res, event, 'Unregistered from event successfully');
+  const eventId = req.params.id
+  const userId = req.id
+
+  try {
+    const event = await EventModel.findByIdAndUpdate(
+      eventId,
+      {
+        $pull : {
+          registrations : { user : userId}
+        }
+      },
+      {
+        new : true,
+      }
+    )
+  
+    if(!event){
+      return res.status(400).json({
+        success : false,
+        message : "event not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Unregistered from event successfully",
+      event : event
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
 const updateEvent = asyncHandler(async (req, res) => {
@@ -216,7 +292,7 @@ const deleteEvent = asyncHandler(async (req, res) => {
       message: "Event deleted successfully",
       event : event
     });
-    
+
   } catch (error) {
     return res.status(500).json({
       success : false,
@@ -226,6 +302,34 @@ const deleteEvent = asyncHandler(async (req, res) => {
   }
 
 });
+
+/* 
+const notifyEventCreation = async (event) => {
+  try {
+    const User = require('../models/user.model');
+
+    const users = await User.find({
+      role: { $in: event.visibleTo },
+    });
+
+    const notifications = users.map(user => ({
+      recipient: user._id,
+      title: `New ${event.category} Event`,
+      message: `${event.title} on ${event.startDate.toDateString()}`,
+      type: 'event',
+      relatedResource: {
+        resourceType: 'event',
+        resourceId: event._id,
+      },
+    }));
+
+    if (notifications.length > 0) {
+      await Notification.insertMany(notifications);
+    }
+  } catch (error) {
+    console.error('Error creating event notifications:', error);
+  }
+}; */
 
 module.exports = {
   createEvent : createEvent,
