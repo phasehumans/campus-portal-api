@@ -123,9 +123,6 @@ const getEventById = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Register for event
- */
 const registerForEvent = asyncHandler(async (req, res) => {
   // const event = await eventService.registerForEvent(req.params.id, req.user._id);
   // sendSuccess(res, event, 'Registered for event successfully', 201);
@@ -139,22 +136,95 @@ const unregisterFromEvent = asyncHandler(async (req, res) => {
   // sendSuccess(res, event, 'Unregistered from event successfully');
 });
 
-/**
- * Update event
- */
 const updateEvent = asyncHandler(async (req, res) => {
-  // const validatedData = updateEventSchema.parse(req.body);
-  // const event = await eventService.updateEvent(req.params.id, validatedData);
+  const updateEventSchema = z.object({
+    title: z.string().min(5, "Title must be at least 5 characters"),
+    description: z.string().min(10, 'Description must be at least 10 characters'),
+    location: z.string().min(1, 'Location is required'),
+    category: z.enum(['academic', 'cultural', 'sports', 'workshop', 'seminar', 'other']),
+    capacity: z.number().min(1),
+    isPublished : z.boolean()
+  })
 
-  // sendSuccess(res, event, 'Event updated successfully');
+  const parseData = updateEventSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
+
+  const {title, description, location, category, capacity, isPublished} = parseData.data
+  const eventId = req.params.id
+
+  try {
+    const event =await EventModel.findByIdAndUpdate(
+      eventId,
+      {
+        title : title,
+        description : description,
+        location : location,
+        category : category,
+        capacity : capacity,
+        isPublished : isPublished,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!event){
+      return res.status(400).json({
+        success : false,
+        message : "event not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Event updated successfully",
+      event : event
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Delete event
- */
 const deleteEvent = asyncHandler(async (req, res) => {
-  // const result = await eventService.deleteEvent(req.params.id);
-  // sendSuccess(res, result, 'Event deleted successfully');
+  const eventId = req.params.id
+
+  try {
+    const event = await EventModel.findByIdAndDelete(eventId)
+  
+    if(!event){
+      return res.status(400).json({
+        success : false,
+        message : "event not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Event deleted successfully",
+      event : event
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+
 });
 
 module.exports = {

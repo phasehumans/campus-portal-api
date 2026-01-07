@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-// Public read access
 router.get('/', getEvents);
 router.get('/:id', getEventById);
 
@@ -14,7 +13,6 @@ router.get('/:id', getEventById);
 router.post('/:id/register', registerForEvent);
 router.delete('/:id/register', unregisterFromEvent);
 
-// Admin only - create/update/delete
 router.post('/', checkRole(['admin', 'faculty']), createEvent);
 router.put('/:id', checkRole(['admin', 'faculty']), updateEvent);
 router.delete('/:id', checkRole(['admin']), deleteEvent);
