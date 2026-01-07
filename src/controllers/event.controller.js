@@ -2,7 +2,7 @@ const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/res
 const {EventModel} = require('../models/event.model.js')
 const {NotificationModel} = require('../models/notification.model.js')
 const { z } = require('zod');
-const { success } = require('zod/v4');
+
 
 const createEvent = asyncHandler(async (req, res) => {
   const createEventSchema = z.object({
@@ -202,7 +202,7 @@ const unregisterFromEvent = asyncHandler(async (req, res) => {
       message: "Unregistered from event successfully",
       event : event
     });
-    
+
   } catch (error) {
     return res.status(500).json({
       success : false,

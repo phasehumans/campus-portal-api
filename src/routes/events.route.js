@@ -9,7 +9,6 @@ router.use(authMiddleware);
 router.get('/', getEvents);
 router.get('/:id', getEventById);
 
-// Register/Unregister for events
 router.post('/:id/register', registerForEvent);
 router.delete('/:id/register', unregisterFromEvent);
 

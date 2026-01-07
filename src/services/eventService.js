@@ -1,4 +1,3 @@
-const Notification = require('../models/notification.model');
 
 /**
  * Create event
