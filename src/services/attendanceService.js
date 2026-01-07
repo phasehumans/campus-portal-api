@@ -161,11 +161,3 @@ const deleteAttendance = async (attendanceId) => {
   return { message: 'Attendance record deleted successfully' };
 };
 
-module.exports = {
-  markAttendance,
-  getAttendanceRecords,
-  getStudentCourseAttendance,
-  bulkMarkAttendance,
-  updateAttendance,
-  deleteAttendance,
-};
