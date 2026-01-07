@@ -1,22 +1,22 @@
 const express = require('express');
-const eventController = require('../controllers/event.controller');
-const { authMiddleware, checkRole } = require('../middleware/auth');
+const { authMiddleware, checkRole } = require('../middleware/auth.js');
+const {getEvents, getEventById, registerForEvent, unregisterFromEvent, createEvent, updateEvent, deleteEvent} = require('../controllers/event.controller.js')
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
 // Public read access
-router.get('/', eventController.getEvents);
-router.get('/:id', eventController.getEventById);
+router.get('/', getEvents);
+router.get('/:id', getEventById);
 
 // Register/Unregister for events
-router.post('/:id/register', eventController.registerForEvent);
-router.delete('/:id/register', eventController.unregisterFromEvent);
+router.post('/:id/register', registerForEvent);
+router.delete('/:id/register', unregisterFromEvent);
 
 // Admin only - create/update/delete
-router.post('/', checkRole(['admin', 'faculty']), eventController.createEvent);
-router.put('/:id', checkRole(['admin', 'faculty']), eventController.updateEvent);
-router.delete('/:id', checkRole(['admin']), eventController.deleteEvent);
+router.post('/', checkRole(['admin', 'faculty']), createEvent);
+router.put('/:id', checkRole(['admin', 'faculty']), updateEvent);
+router.delete('/:id', checkRole(['admin']), deleteEvent);
 
 module.exports = router;

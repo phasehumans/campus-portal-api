@@ -1,4 +1,3 @@
-const { success } = require('zod/v4');
 const { NotificationModel } = require('../models/notification.model.js');
 const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
 

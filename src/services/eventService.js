@@ -1,4 +1,3 @@
-const Event = require('../models/event.model');
 const Notification = require('../models/notification.model');
 
 /**
@@ -198,13 +197,3 @@ const notifyEventCreation = async (event) => {
   }
 };
 
-module.exports = {
-  createEvent,
-  getEvents,
-  getEventById,
-  registerForEvent,
-  unregisterFromEvent,
-  updateEvent,
-  deleteEvent,
-  notifyEventCreation,
-};
