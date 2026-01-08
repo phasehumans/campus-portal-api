@@ -1,5 +1,5 @@
 const { NotificationModel } = require('../models/notification.model.js');
-const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
+const { asyncHandler, getPaginationParams } = require('../utils/responseHandler.js');
 
 
 const getNotifications = asyncHandler(async (req, res) => {

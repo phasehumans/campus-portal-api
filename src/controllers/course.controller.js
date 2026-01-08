@@ -1,6 +1,6 @@
-const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler');
+const { asyncHandler, getPaginationParams } = require('../utils/responseHandler.js');
 const { z } = require('zod');
-const { CourseModel } = require('../models/course.model');
+const { CourseModel } = require('../models/course.model.js');
 const {EnrollmentModel} = require('../models/enrollment.model.js');
 const { UserModel } = require('../models/user.model.js');
 const { sendEmail, emailTemplates } = require('../utils/email.js');

@@ -1,4 +1,4 @@
-const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler.js');
+const { asyncHandler, getPaginationParams } = require('../utils/responseHandler.js');
 const {z} = require('zod')
 const {MaterialModel} = require('../models/material.model.js')
 
@@ -7,7 +7,7 @@ const createMaterial = asyncHandler(async (req, res) => {
   const createMaterialSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().optional(),
-    type: z.enum(['lecture', 'assignment', 'reading', 'video', 'document', 'other']),
+    type: z.enum(['pdf', 'doc', 'docx', 'ppt', 'pptx', 'video', 'image', 'other']),
     fileName: z.string().min(1, 'File name is required'),
     fileSize: z.number().min(1),
     dueDate: z.string().datetime().optional().or(z.null()),

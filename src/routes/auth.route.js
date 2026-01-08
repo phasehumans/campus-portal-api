@@ -1,6 +1,6 @@
 const express = require('express');
 const { register, login, getCurrentUser, updateProfile, createApiKey, listApiKeys, revokeApiKey } = require('../controllers/auth.controller.js')
-const { authMiddleware, checkRole } = require('../middleware/auth.js');
+const { authMiddleware} = require('../middleware/auth.js');
 const { authLimiter } = require('../middleware/commonMiddleware.js');
 
 const router = express.Router();

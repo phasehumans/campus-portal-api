@@ -297,27 +297,3 @@ campus-portal-api/
    │ 6. Monitor suspicious activity  │
    └─────────────────────────────────┘
 ```
-### RBAC Authorization
-
-```
-                User Makes Request
-                        │
-                        ▼
-            ┌───────────────────────┐
-            │   Check req.role      │
-            └───────┬───────────────┘
-                    │
-         ┌──────────┼──────────┐
-         │          │          │
-         ▼          ▼          ▼
-    Student?   Faculty?   Admin?
-         │          │          │
-    Can do:     Can do:    Can do:
-    • View own  • Create   • Everything
-      announcements announcements
-    • View own  • Upload
-      results     materials
-    • Enroll    • View
-    • Download  student
-      materials  results
-```

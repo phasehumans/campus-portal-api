@@ -1,4 +1,4 @@
-const { asyncHandler, sendSuccess, sendError, getPaginationParams } = require('../utils/responseHandler');
+const { asyncHandler, getPaginationParams } = require('../utils/responseHandler');
 const {z} = require('zod');
 const { AnnouncementModel } = require('../models/announcement.model.js');
 

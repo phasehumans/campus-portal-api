@@ -1,9 +1,9 @@
 const dotenv = require('dotenv')
 dotenv.config()
 const express = require('express');
-const { connectDB } = require('./config/database');
-const { errorHandler, notFound } = require('./middleware/errorHandler');
-const { applyMiddleware } = require('./middleware/commonMiddleware');
+const { connectDB } = require('./config/database.js');
+const { errorHandler, notFound } = require('./middleware/errorHandler.js');
+const { applyMiddleware } = require('./middleware/commonMiddleware.js');
 
 
 const authRoutes = require('./routes/auth.route.js');
@@ -23,7 +23,6 @@ connectDB();
 
 applyMiddleware(app);
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
     status: 'OK',

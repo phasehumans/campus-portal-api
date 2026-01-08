@@ -1,6 +1,5 @@
 const {
   asyncHandler,
-  sendSuccess,
   getPaginationParams,
 } = require("../utils/responseHandler.js");
 const { z } = require("zod");
@@ -293,7 +292,7 @@ const updateResult = asyncHandler(async (req, res) => {
       })
     }
   
-    return res.status({
+    return res.status(200).json({
       success: true,
       message: "Result updated successfully",
       result : result
