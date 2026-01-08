@@ -10,10 +10,8 @@ router.post('/', checkRole(['faculty', 'admin']), markAttendance);
 
 router.post('/bulk', checkRole(['faculty', 'admin']), bulkMarkAttendance);
 
-// Get attendance records (Faculty/Admin)
 router.get('/records', checkRole(['faculty', 'admin']), getAttendanceRecords);
 
-// Get student attendance for course
 router.get('/student/:studentId/course/:courseId', checkRole(['faculty', 'admin']), getStudentCourseAttendance);
 
 // Update attendance

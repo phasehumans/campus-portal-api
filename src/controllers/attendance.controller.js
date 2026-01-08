@@ -107,16 +107,45 @@ const getAttendanceRecords = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Get student attendance for course
- */
 const getStudentCourseAttendance = asyncHandler(async (req, res) => {
-  // const result = await attendanceService.getStudentCourseAttendance(
-  //   req.params.studentId,
-  //   req.params.courseId
-  // );
+  const studentId = req.params.studentId
+  const courseId = req.params.courseId
 
-  // sendSuccess(res, result, 'Attendance summary retrieved successfully');
+  try {
+    const records = await AttendanceModel.find({
+      student : studentId,
+      course : courseId
+    }).sort({date : -1})
+  
+    const total = records.length;
+    const present = records.filter((r) => r.status === "present").length;
+    const absent = records.filter((r) => r.status === "absent").length;
+    const late = records.filter((r) => r.status === "late").length;
+    const excused = records.filter((r) => r.status === "excused").length;
+  
+    const percentage = total > 0 ? ((present + excused) / total) * 100 : 0;
+  
+    return res.status(200).json({
+      success: true,
+      message: "Attendance summary retrieved successfully",
+      records : records,
+      summary: {
+        total,
+        present,
+        absent,
+        late,
+        excused,
+        percentage: percentage.toFixed(2),
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
+  
 });
 
 const bulkMarkAttendance = asyncHandler(async (req, res) => {
@@ -161,22 +190,86 @@ const bulkMarkAttendance = asyncHandler(async (req, res) => {
   }
 });
 
-/**
- * Update attendance
- */
 const updateAttendance = asyncHandler(async (req, res) => {
-  // const validatedData = updateAttendanceSchema.parse(req.body);
-  // const attendance = await attendanceService.updateAttendance(req.params.id, validatedData);
+  const updateAttendanceSchema = z.object({
+    status: z.enum(["present", "absent", "late", "excused"]),
+    remarks: z.string().optional(),
+  });
 
-  // sendSuccess(res, attendance, 'Attendance updated successfully');
+  const parseData = updateAttendanceSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs",
+      errors : parseData.error.flatten()
+    })
+  }
+
+  const {status, remarks} = parseData.data
+  const attendanceId = req.params.id
+
+  try {
+    const attendance = await AttendanceModel.findByIdAndUpdate(
+      attendanceId,
+      {
+        status : status,
+        remarks : remarks,
+        updatedAt : new Date()
+      },{
+        new : true,
+        runValidators : true
+      }
+    )
+  
+    if(!attendance){
+      return res.status(400).json({
+        success: false,
+        message: "Attendance record not found",
+      });
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Attendance updated successfully",
+      attendance : attendance
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Delete attendance
- */
 const deleteAttendance = asyncHandler(async (req, res) => {
-  // const result = await attendanceService.deleteAttendance(req.params.id);
-  // sendSuccess(res, result, 'Attendance deleted successfully');
+  const attendanceId = req.params.id
+
+  try {
+    const attendance = await AttendanceModel.findByIdAndDelete(attendanceId)
+  
+    if(!attendance){
+      return res.status(400).json({
+        success : false,
+        message : "attendance not found"
+      })
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Attendance deleted successfully",
+      attendance : attendance
+    });
+    
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
 module.exports = {
