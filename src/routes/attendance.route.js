@@ -6,10 +6,8 @@ const router = express.Router();
 
 router.use(authMiddleware);
 
-// Mark attendance (Faculty/Admin only)
 router.post('/', checkRole(['faculty', 'admin']), markAttendance);
 
-// Bulk mark attendance (Faculty/Admin only)
 router.post('/bulk', checkRole(['faculty', 'admin']), bulkMarkAttendance);
 
 // Get attendance records (Faculty/Admin)

@@ -1,28 +1,110 @@
 const { asyncHandler, sendSuccess, getPaginationParams } = require('../utils/responseHandler');
 const {AttendanceModel} = require('../models/attendance.model.js')
 const {CourseModel} = require('../models/course.model.js')
+const { z } = require('zod');
+const { success, record, date } = require('zod/v4');
 
-/**
- * Mark attendance
- */
+
 const markAttendance = asyncHandler(async (req, res) => {
-  // const validatedData = createAttendanceSchema.parse(req.body);
-  // const attendance = await attendanceService.markAttendance({
-  //   ...validatedData,
-  //   recordedBy: req.user._id,
-  // });
+  const createAttendanceSchema = z.object({
+    student: z.string().min(1, "Student ID is required"),
+    course: z.string().min(1, 'Course ID is required'),
+    date: z.string().datetime(),
+    status: z.enum(['present', 'absent', 'late', 'excused']),
+    remarks: z.string().optional(),
+  });
 
-  // sendSuccess(res, attendance, 'Attendance marked successfully', 201);
+  const parseData = createAttendanceSchema.safeParse(req.body)
+
+  if(!parseData.success){
+    return res.status(400).json({
+      success : false,
+      message : "invalid inputs"
+    })
+  }
+
+  const {student, course, date, status, remarks} = parseData.data
+  const userId = req.id
+
+  try {
+    const existing = await AttendanceModel.findOne({
+      student: student,
+      course: course,
+      date: {
+        $gte: new Date(new Date(date).setHours(0, 0, 0, 0)),
+        $lt: new Date(new Date(date).setHours(23, 59, 59, 999)),
+      }
+    });
+  
+    if(existing){
+      return res.status(400).json({
+        success: false,
+        message: "Attendance already marked for this date",
+      });
+    }
+  
+    const attendance = await AttendanceModel.create({
+      student : student,
+      course : course,
+      date : new Date(date),
+      status : status,
+      remarks : remarks,
+      markedBy : userId
+    })
+  
+    return res.status(201).json({
+      success: true,
+      message: "Attendance marked successfully",
+      attendance : attendance
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
-/**
- * Get attendance records
- */
 const getAttendanceRecords = asyncHandler(async (req, res) => {
-  // const { page, limit } = getPaginationParams(req.query);
-  // const result = await attendanceService.getAttendanceRecords(req.query, page, limit);
+  const { page, limit } = getPaginationParams(req.query);
+  const skip = (page - 1) * limit
+  const query = req.query
 
-  // sendSuccess(res, result, 'Attendance records retrieved successfully');
+  const filters = {}
+
+  if(query.student){
+    filters.student = query.student
+  }
+
+  if(query.course){
+    filters.course = query.course
+  }
+
+  try {
+    const records = await AttendanceModel.find(filters).sort({date : -1}).skip(skip).limit(limit)
+    const total = await AttendanceModel.countDocuments(filters)
+  
+    return res.status(200).json({
+      success: true,
+      message: "Attendance records retrieved successfully",
+      records: records,
+      pagination: {
+        total : total,
+        pages: Math.ceil(total / limit),
+        currentPage: page,
+        limit : limit,
+      },
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
 /**
@@ -37,18 +119,46 @@ const getStudentCourseAttendance = asyncHandler(async (req, res) => {
   // sendSuccess(res, result, 'Attendance summary retrieved successfully');
 });
 
-/**
- * Bulk mark attendance
- */
 const bulkMarkAttendance = asyncHandler(async (req, res) => {
-  // const { attendanceData } = req.body;
+  const { attendanceData } = req.body;
 
-  // if (!Array.isArray(attendanceData) || attendanceData.length === 0) {
-  //   return sendSuccess(res, {}, 'No attendance data provided', 400);
-  // }
+  if (!Array.isArray(attendanceData) || attendanceData.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "No attendance data provided",
+    });
+  }
 
-  // const results = await attendanceService.bulkMarkAttendance(attendanceData, req.user._id);
-  // sendSuccess(res, results, 'Bulk attendance processing completed');
+  const userId = req.id
+  const results = []
+
+  try {
+    for(record of attendanceData){
+      try {
+        const attendance = await AttendanceModel.create({
+          ...record,
+          markedBy : userId
+        })
+  
+        results.push({success : true, attendance : attendance})
+      } catch (error) {
+        results.push({success : false, student : record.student})
+      }
+    }
+  
+    return res.status(200).json({
+      success: true,
+      message: "Bulk attendance processing completed",
+      attendance : results
+    });
+  
+  } catch (error) {
+    return res.status(500).json({
+      success : false,
+      message : "server error",
+      errors : error.message
+    })
+  }
 });
 
 /**
