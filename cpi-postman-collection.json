@@ -1,0 +1,1334 @@
+{
+	"info": {
+		"_postman_id": "0a48939e-13ae-4094-87fb-982125678115",
+		"name": "Campus Portal API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43250119"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"ADMIN\",\r\n  \"lastName\": \"ADMIN\",\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"admin12\",\r\n  \"department\": \"Computer Science\",\r\n  \"phone\": \"9876543983\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/register",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"ADMIN\",\r\n  \"lastName\": \"ADMIN\",\r\n  \"email\": \"admin@admin.com\",\r\n  \"password\": \"admin12\",\r\n  \"department\": \"Computer Science\",\r\n  \"phone\": \"9876543983\",\r\n  \"role\": \"admin\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get Profile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/me",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update Profile",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\" : \"UPDATED USER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/me",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create apikey",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\" : \"DEMO API 2\",\r\n    \"description\" : \"smaple description\",\r\n    \"permissions\" : [\"read\", \"write\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/api-key",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"api-key"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all apikeys",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/api-keys",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"api-keys"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "revoke apikey",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/auth/api-keys/6957b8d8e4f82b953b6a14f8",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"auth",
+						"api-keys",
+						"6957b8d8e4f82b953b6a14f8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/admin/users?role=faculty",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"admin",
+						"users"
+					],
+					"query": [
+						{
+							"key": "role",
+							"value": "faculty"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user by Id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/admin/users/6956463aa933911cdab762be",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"admin",
+						"users",
+						"6956463aa933911cdab762be"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update user role",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"role\" : \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/admin/users/6956463aa933911cdab762be/role",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"admin",
+						"users",
+						"6956463aa933911cdab762be",
+						"role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deactivate user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/admin/users/695646a10dcb50419023b49d/deactivate",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"admin",
+						"users",
+						"695646a10dcb50419023b49d",
+						"deactivate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "activate user",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"role\" : \"admin\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/admin/users/695646a10dcb50419023b49d/activate",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"admin",
+						"users",
+						"695646a10dcb50419023b49d",
+						"activate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create announcements",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Hello\",\r\n  \"content\": \"This content is long enough.\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/announcements/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"announcements",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get announcements",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NTY1ZmRhZmUzYmM4N2EzZTc5MWQ3MSIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzY3MjY4NDU1LCJleHAiOjE3Njc4NzMyNTV9.BCXSxltwv0hIIFabmmwln1RfWXi_rxooZZP934oT_r8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/announcements/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"announcements",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get announcements by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/announcements/6959d57dd41c32105ab6434f",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"announcements",
+						"6959d57dd41c32105ab6434f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update announcements",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Updated Exam Schedule\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/announcements/6959d57dd41c32105ab6434f",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"announcements",
+						"6959d57dd41c32105ab6434f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete announcements",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/announcements/6959d6a6d41c32105ab64353",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"announcements",
+						"6959d6a6d41c32105ab64353"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create result",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"student\": \"64fa12abc1234567890abcd1\",\r\n  \"course\": \"64fa12abc1234567890abcd2\",\r\n  \"marks\": 85,\r\n  \"grade\": \"A\",\r\n  \"semester\": \"fall\",\r\n  \"year\": 2025,\r\n  \"remarks\": \"Good performance\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "publish result",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resultIds\": [\"695a5be907dd392f76c53386\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/publish",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						"publish"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update result",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"marks\": 78,\r\n  \"grade\": \"B\",\r\n  \"remarks\": \"Improved after mid-semester evaluation\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/695a5be907dd392f76c53386",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						"695a5be907dd392f76c53386"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete result",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resultIds\": [\"695a5be907dd392f76c53386\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/695fa2eb8cd450705ac3e248",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						"695fa2eb8cd450705ac3e248"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get results",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get results by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/results/64fa12abc1234567890abcd1",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"results",
+						"64fa12abc1234567890abcd1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create course",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"courseCode\": \"cs404\",\r\n  \"title\": \"Distributed Systems\",\r\n  \"credits\": 4,\r\n  \"instructor\": \"64fa12abc1234567890abcd8\",\r\n  \"department\": \"Computer Science\",\r\n  \"semester\": \"fall\",\r\n  \"year\": 2026,\r\n  \"maxStudents\": 65\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all courses",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"resultIds\": [\"695a5be907dd392f76c53386\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course by id",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update course",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"credits\": 5,\r\n  \"maxStudents\": 80,\r\n  \"schedule\": {\r\n    \"days\": [\"Monday\", \"Friday\"],\r\n    \"time\": \"11:00 - 12:30\",\r\n    \"location\": \"Room B-101\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete course",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"credits\": 5,\r\n  \"maxStudents\": 80,\r\n  \"schedule\": {\r\n    \"days\": [\"Monday\", \"Friday\"],\r\n    \"time\": \"11:00 - 12:30\",\r\n    \"location\": \"Room B-101\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d22d9c169b010348add92",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d22d9c169b010348add92"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "enroll student",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2252c169b010348add6e/enroll",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2252c169b010348add6e",
+						"enroll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dropCourse",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/drop",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"drop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create material",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Lecture Slides – Intro to AI\",\r\n  \"description\": \"Slides covering AI basics and history\",\r\n  \"type\": \"pptx\",\r\n  \"fileName\": \"intro-to-ai.pptx\",\r\n  \"fileSize\": 3485690,\r\n  \"dueDate\": \"2026-02-10T18:30:00.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update material",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials/695fa6574e5c816e34e53a85",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials",
+						"695fa6574e5c816e34e53a85"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete material",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2252c169b010348add6e/materials/695fa68b4e5c816e34e53a8b",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2252c169b010348add6e",
+						"materials",
+						"695fa68b4e5c816e34e53a8b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "download material",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials/695fa6574e5c816e34e53a85/download",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials",
+						"695fa6574e5c816e34e53a85",
+						"download"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course material",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course material id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials/695fa6574e5c816e34e53a85",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials",
+						"695fa6574e5c816e34e53a85"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course material id Copy",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NThkN2NjMGQzODgzNTdjZTgyZWZiNSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc2NzQzMDExNywiZXhwIjoxNzY4MDM0OTE3fQ.SatO3LcjFTZfOHSQuA3f1JRSTw_ycbozr2Gzjn47zd4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Assignment 1 – Final Version\",\r\n  \"dueDate\": \"2026-02-20T23:59:59.000Z\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:5000/api/courses/695d2288c169b010348add89/materials/695fa6574e5c816e34e53a85",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"courses",
+						"695d2288c169b010348add89",
+						"materials",
+						"695fa6574e5c816e34e53a85"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
